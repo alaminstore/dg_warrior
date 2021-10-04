@@ -6,7 +6,7 @@
 @section('title','DG Warrior | Job Post')
 @section('content')
 
-<style>.col-sm-3 {display: flex;justify-content: flex-end;align-items: center;}.level_recruit {display: flex;flex-wrap: wrap;justify-content:flex-start;align-items:flex-start;}.dark-theme .note-btn-group .btn {color: #fbfbfb!important;background: #252542;}.panel-default>.panel-heading {border: 1px solid #8e8e8e;}</style>
+<style>.col-sm-3 {display: flex;justify-content: flex-end;align-items: center;}.level_recruit {display: flex;flex-wrap: wrap;justify-content:flex-start;align-items:flex-start;}.dark-theme .note-btn-group .btn {color: #fbfbfb!important;background: #252542;}.panel-default>.panel-heading {border: 1px solid #8e8e8e;}.note-placeholder {opacity: 0.7;font-weight: 300;font-size: 13px;}</style>
 <div class="main-content pt-0">
     <div class="container">
        <!-- Page Header -->
@@ -38,7 +38,7 @@
                                    <span style="background: #15A552;padding: 2px 10px;border: 1px solid #02a346;color: #fff;font-size: 12px;border-radius: 3px;margin-left: 10px;"><i class="fa fa-user"></i> {{ Auth::user()->user_title == 1 ? "DG Executive" : "" }}{{ Auth::user()->user_title == 2 ? "DG Manager" : "" }}{{ Auth::user()->user_title == 3 ? "DG Director" : "" }}</span>
                                   @endif
                                </div>
-                               <p class="tx-white-7 mb-1">*  Post in our community or post within your team.</p>
+                               <p class="tx-white-7 mb-1">*  Post your job to get more exposure worldwide in our community.</p>
                             </div>
                             <img src="{{asset('backend/assets/img/pngs/work3.png')}}" alt="user-img">
                          </div>
@@ -51,7 +51,7 @@
                    <div class="card custom-card overflow-hidden">
                       <div class="card-header border-bottom-0">
                          <div>
-                            <label class="main-content-label mb-2">Fillup the form </label> <span class="d-block tx-12 mb-0 text-muted">Fill up form to post and issue jobs based on your requirements.</span>
+                            <label class="main-content-label mb-2">FILL UP the form </label> <span class="d-block tx-12 mb-0 text-muted">Fill up form to post and issue jobs based on your requirements.</span>
                          </div>
                       </div>
                       <div class="card-body offset-md-1 col-md-9 col-xs-12">
@@ -171,11 +171,25 @@
 @section('js')
 <script src="{{asset('backend/assets/plugins/summernote/summernote-bs4.js')}}"></script>
 <script>
+    const testStr = `Hello, World, all you beautiful people in it!`;
+
+    console.log(testStr);
 
     $(document).ready(function() {
         var trap = false;
       $('.summernote').summernote({
-        placeholder: 'Details here...',
+        placeholder:`
+        Subject: Follow Our Social Platform Account<br>
+        Description : (Optional)<br>
+        Directions :<br>
+        Step 1: Login to your Social Platform account.<br>
+        Step 2:  Search for (Example) or visit<br>
+        URL： https://SocialPlatform.com/Example<br>
+        Step 3: Click on follow button,<br>
+        Once you have followed, take a screenshot as prove<br>
+        Step 4:  Head back to Dg warrior and complete task by submitting the prove you have taken (Point 3).<br>
+        Step 5: Task completed, wait for job issuer to validate and approve your submission.<br>
+        `,
         tabsize: 2,
         height: 300,
         callbacks: {
@@ -212,9 +226,6 @@
                 job_title: {
                     required:true,
                     maxlength: 80,
-                },
-                job_type: {
-                    required:true,
                 },
                 job_price: {
                     required:true,
@@ -339,6 +350,7 @@
                         $( "#submitPost" ).prop( "disabled", false );
                         $( "#pre-loading" ).removeClass( "spinner-border");
                         $('#confirmationSub').modal('hide');
+                        $("#ChoosePayment").modal('show');
                     }else{
                         if(response.status == 0){
                             $.each(response.error,function(key,value){

@@ -72,12 +72,12 @@
                        <div class="modal-content">
                            <div class="modal-header">
                                <div class="headCenter"><h5 class="modal-title mt-0" id="myModalLabel">Password Change</h5></div>
-                               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                               <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="font-weight: 300;">&times;</button>
                            </div>
                            <div class="modal-body">
                             <div class="wrapper-page">
 
-                                <div class="p-3">
+                                <div class="p-1">
                                     <h4 class="text-muted font-18 mb-3 text-center">Reset Password</h4>
                                     {!!Form::open(['class' => 'form-horizontal','id'=>'newPassForm'])!!}
                                         @csrf
@@ -100,7 +100,7 @@
 
                                         <div class="form-group row m-t-20">
                                             <div class="col-12 text-right">
-                                                <button class="btn btn-primary btn-square btn-sm" type="submit"><i class="fa fa-cogs"></i> Reset</button>
+                                                <button class="btn btn-primary btn-square btn-sm" type="submit"><i class="fa fa-cogs"></i> Password Reset</button>
                                             </div>
                                         </div>
 

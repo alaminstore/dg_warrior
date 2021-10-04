@@ -46,7 +46,7 @@
                 <p class="text-muted card-sub-title text-center">Here is the list of all posted job by you. You can view the details and history of your jobs. You can also delete these job if you want.  </p>
             </div>
             <div class="table-responsive">
-                <table id="example2" class="table table-striped table-bordered text-nowrap" >
+                <table id="example2" class="table table-striped table-bordered text-nowrap">
                 <thead>
                     <tr class="text-center">
                         <th width="15%">Name</th>
@@ -95,7 +95,7 @@
                                 <a class="deleteuser" data-id="{{$list->id}}">
                                     <button class="btn ripple btn-danger category-delete"
                                     title="Delete">
-                                    <i class="fa fa-trash" data-toggle="tooltip" title="" data-original-title="delete"></i>
+                                    <i class="fa fa-trash" data-toggle="tooltip" title="delete" data-original-title="delete"></i>
                                     </button>
                                 </a>
                             </td>
@@ -559,7 +559,7 @@
            <div class="form-group row">
                <label for="name" class="col-sm-3 col-form-label">$_Balance</label>
                <div class="col-sm-9">
-                   <input class="form-control" type="number" min="1" step="any" name="balance" id="balance" placeholder="Total Balance">
+                   <input class="form-control" type="number" min="1" step="any" name="balance" id="balanceChangesOption" placeholder="Total Balance">
                    <input class="form-control" type="hidden" name="old_balance" id="old_balance" placeholder="Total Balance">
                    <input class="form-control" type="hidden" name="user_id" id="user_id">
                    <input class="form-control" type="hidden" id="old_withdrawable" name="old_withdrawable" placeholder="Only withdrawable">
@@ -675,7 +675,8 @@
             dataType: 'json',
             success: function (response) {
                 let url = window.location.origin;
-                $('#balance').val(response.data.balance);
+                let currentBalance = response.data.balance == null ? "0" : response.data.balance;
+                $('#balanceChangesOption').val(currentBalance);
                 $('#old_balance').val(response.data.balance);
                 $('#old_withdrawable').val(response.data.withdrawable);
                 $('#user_id').val(response.data.id);
@@ -730,7 +731,7 @@
                                 if (response.status === true) {
                                     toastr.success('Admin removed successfully');
                                     setTimeout(function(){
-                                        $('#example1').DataTable().row('.item' + response.data.id)
+                                        $('#example2').DataTable().row('.item' + response.data.id)
                                         .remove()
                                         .draw();
                                     }, 1500);

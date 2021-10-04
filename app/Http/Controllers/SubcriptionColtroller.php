@@ -33,6 +33,7 @@ class SubcriptionColtroller extends Controller
     public function subscribeStatus(Request $request){
         $subscribe = User::where('id','=',$request->id)->first();
         $subscribe->subscription = 1;
+        $subscribe->balance -= 1;
         $beforSubsorNot = SubcribeCheck::where('user_id','=',$request->id)->first();
         if($beforSubsorNot === null){
             $newsubs = new SubcribeCheck();

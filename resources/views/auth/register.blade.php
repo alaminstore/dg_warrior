@@ -416,6 +416,17 @@
                                 @enderror
                             </div>
                         </div>
+                        @if (url()->full()== url('/register'))
+                        <div class="form-group row">
+                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Referrer Code') }}</label>
+                            <div class="col-md-6 d-flex" style="align-items: baseline;">
+                                <input id="referrer_code" type="text" class="form-control" name="referrer_code" value="{{ old('referrer_code') }}"  autocomplete="referrer_code" placeholder="Only Referrer code here...">
+                                <p>[optional]</p>
+                            </div>
+                        </div>
+                         @else
+                         <input  type="hidden" class="form-control" name="referrer_code">
+                        @endif
                         <div class="form-group row">
                             <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
 
@@ -433,7 +444,7 @@
                             <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
 
                             <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password" placeholder="Repead Password...">
+                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password" placeholder="Repeat Password...">
                             </div>
                         </div>
                         <div class="form-group row">

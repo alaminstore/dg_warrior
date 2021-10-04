@@ -31,6 +31,7 @@ class AddNewColumnToUsersTable extends Migration
             $table->string('waiting_load_code')->nullable();
             $table->unsignedInteger('exp')->nullable();
             $table->unsignedInteger('level')->nullable();
+            $table->double('sales_achieved')->nullable();
         });
     }
 

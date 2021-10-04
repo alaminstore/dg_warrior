@@ -30,28 +30,7 @@
                                   <div class="card-body submittingtask">
                                       <span class="namefocus"><span style="color:aquamarine;font-size:25px;">&check;</span> Withdraw completed </span>&nbsp; at <span class="secondaryfocus"> {{ \Carbon\Carbon::parse($item->accept_time)->format('g:ia => jS F, Y') }}</span> &nbsp;  &nbsp;Amount: <span class="bg">${{ $item->withdraw_amount }}</span>
                                       <div class="showDetails">
-                                        <button type="button" class="btn btn-sm btn-success"  data-toggle="modal" data-target="#infos" data-id="{{ $item->id }}">Info</button>
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="infos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Wallet Address</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true"><span style="font-weight: 300;">&times;</span></span>
-                                                </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    User Name:  &nbsp; {{ $item->getUser->username }} <br>
-                                                    Country of Residence:  &nbsp; {{ $item->getUser->country }}  <br>
-                                                    Waller Name:  &nbsp; <b style="color: rgb(80, 255, 80)">{{ $item->wallet_name }}</b> <br>
-                                                    Wallet Address: <span class="bg">{{ $item->wallet_address }}</span>
-                                                </div>
-
-                                            </div>
-                                            </div>
-                                        </div>
-                                        <!-- Modal End -->
+                                        <button type="button" class="btn btn-sm btn-success completedWithdraw"  data-toggle="modal" data-target="#infos" data-id="{{ $item->id }}">Info</button>
                                       </div>
                                   </div>
 
@@ -75,5 +54,56 @@
         </div>
     </div>
 </div>
-<!-- End Main Content-->
+
+<!-- Modal -->
+<div class="modal fade" id="infos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Wallet Address</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true"><span style="font-weight: 300;">&times;</span></span>
+        </button>
+        </div>
+        <div class="modal-body">
+            Waller Name:  &nbsp; <b style="color: rgb(80, 255, 80)" id="walletName"></b> <br>
+            Wallet Address: <span class="bg" id="walletAddress"></span>
+        </div>
+
+    </div>
+    </div>
+</div>
+<!-- Modal End -->
+
+@endsection
+@section('js')
+<script>
+    $(document).ready( function () {
+        $(document).on('click', '.completedWithdraw', function () {
+        let id = $(this).attr('data-id');
+        // console.log(id);
+        $.ajax({
+            url: "{{url('completedwithdrawaddressdetails')}}/" + id + '/edit',
+            method: "get",
+            data: {},
+            dataType: 'json',
+            success: function (response) {
+                let url = window.location.origin;
+                // console.log('data', response);
+                $('#walletName').html('');
+                $('#walletAddress').html('');
+                $('#walletName').html(response.data.wallet_name);
+                $('#walletAddress').html(response.data.wallet_address);
+            },
+            error: function (error) {
+                if (error.status == 404) {
+                    toastr.error('Not found!');
+                }
+            }
+        });
+    });
+
+    });
+
+</script>
 @endsection

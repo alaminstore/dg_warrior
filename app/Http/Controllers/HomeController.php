@@ -28,7 +28,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','verified']);
     }
 
     /**
@@ -38,7 +38,6 @@ class HomeController extends Controller
      */
     // public $totalUser = [];
     public function index(){
-        // return view('home');
         $check = ReferalTracking::with('getUserName')->where('refered_user',Auth::user()->id)
                                         ->select('user')->get();
         // return $check;
@@ -131,9 +130,10 @@ class HomeController extends Controller
         }
         // return $check;
         $fiveTiersUsersInfo = User::with('referrer')->whereIn('id',$totalUser)->get();
-        $filter = [0,3];
-        $AllForSuperAdmin = User::all();
-        $sidebarNormalTask = JobPost::where('job_type',2)->whereIn('job_issuer_rank',$filter)->orderBy('id', 'DESC')->get()->take(4);
+        // $filter = [0,3];
+        $AllForSuperAdmin = User::where('role_id',null)->get();
+        // $sidebarNormalTask = JobPost::where('job_type',2)->whereIn('job_issuer_rank',$filter)->orderBy('id', 'DESC')->get()->take(4);
+        $sidebarNormalTask = JobPost::where('job_type',2)->where('job_visibility',1)->where('job_worker','!=',0)->where('user_id','!=',Auth::user()->id)->orderBy('id', 'DESC')->get()->take(4);
         $executiveTask = JobPost::where('job_type',2)->where('job_visibility',3)->where('user_id','!=',Auth::user()->id)->orderBy('id', 'DESC')->get()->take(4);
         $managerTask = JobPost::where('job_issuer_rank',10)->orderBy('id', 'DESC')->get()->take(4);
         return view('backend.dashboard',compact('check','total','data','data2nd','data3rd','data4th','data5th','fiveTiersUsersInfo','sidebarNormalTask','executiveTask','managerTask','totalUser','AllForSuperAdmin'));
@@ -149,7 +149,7 @@ class HomeController extends Controller
                 $DeletePermissionOfAdmin = false;
             }
         }
-        $userLists = User::with('referrer')->where('role_id','=', null)->get();
+        $userLists = User::with('referrer')->where('role_id','=', null)->orderBy('id', 'DESC')->get();
         $adminInfo = User::with('getAdminRole')->where('role_id','=', 2)->get();
         // return $adminInfo;
         return view('backend.admin.userlist',compact('userLists','adminInfo','DeletePermissionOfAdmin'));
@@ -188,7 +188,7 @@ class HomeController extends Controller
             if(($request->job_price * $request->job_worker) > Auth::user()->balance){
                 return response()->json([
                     'status' => 2,
-                    'balanceWarning' => "Sorry You have not enough balance. Try Again with less amount."
+                    'balanceWarning' => "Sorry You have not enough balance. Try Again with less amount or Top Up."
                 ]);
             }else{
                 $jobpost = new JobPost();
@@ -282,7 +282,7 @@ class HomeController extends Controller
     }
 
     public function joblist(){
-        $joblists = JobPost::where('job_status',0)->get();
+        $joblists = JobPost::with("getUser")->where('job_status',0)->get();
         $jobPricePermit = null;
         if(Auth::user()->role_id == 2){
             $token = AdminDetail::where('user_id','=',Auth::user()->id)->where('job_price_power','=',1)->first();
@@ -294,6 +294,20 @@ class HomeController extends Controller
         }
         return view('backend.joblist',compact('joblists','jobPricePermit'));
     }
+
+    public function alljoblist(){
+        $joblists = JobPost::where('job_status',1)->get();
+        $jobPricePermit = null;
+        if(Auth::user()->role_id == 2){
+            $token = AdminDetail::where('user_id','=',Auth::user()->id)->where('job_price_power','=',1)->first();
+            if($token != null){
+                $jobPricePermit = true;
+            }else{
+                $jobPricePermit = false;
+            }
+        }
+        return view('backend.alljoblist',compact('joblists','jobPricePermit'));
+    }
     public function destroy(Request $request){
         $subservice = JobPost::find($request->id);
         if($subservice->delete()){
@@ -302,6 +316,36 @@ class HomeController extends Controller
     }
     public function userDestroy(Request $request){
         $userDelete = User::find($request->id);
+        $check = ReferalTracking::where('refered_user',$userDelete->id)
+                                        ->select('user')->get();
+        if($check){
+            foreach($check as $ck){
+                $refId = User::find($ck->user);
+                $refId->referrer_id = null;
+                $refId->save();
+            }
+        }
+        $theUserJobs = JobPost::where('user_id',$userDelete->id)->select('id')->get();
+        foreach($theUserJobs as $jobs){
+            $anyoneSubmitOrNot = SubmitTask::where('job_id',$jobs->id)->where('status',null)->get();
+            $appliedornot = AppliedJobStatus::where('jobpost_id',$jobs->id)->where('status',0)->get();
+            if($appliedornot){
+                foreach($appliedornot as $appliedId){
+                    $appliedId->delete();
+                }
+            }
+            if($anyoneSubmitOrNot){
+               foreach($anyoneSubmitOrNot as $pickUser){
+                $theUserInfo = User::where('id',$pickUser->user_id)->first();
+                $theUserInfo->balance+=$pickUser->job_price;
+                $theUserInfo->withdrawable+=$pickUser->job_price;
+                if($theUserInfo->save()){
+                    $pickUser->status =1;
+                    $pickUser->save();
+                }
+               }
+            }
+        }
         $availableInReferridIdOrNot = User::where('referrer_id','=',$request->id)->first();
         if($availableInReferridIdOrNot === null){
             if($userDelete->delete()){
@@ -322,14 +366,18 @@ class HomeController extends Controller
     }
 
     public function availableJob(){
-        $currentUser = Auth::user()->id;
+        $currentUser = User::where('id',Auth::user()->id)->first();
+        $thereferrel_id = $currentUser->referrer_id == null ? null : $currentUser->referrer_id;
         // ================================================================================================
         // Start
-        $check = ReferalTracking::with('getUserName')->where('refered_user',Auth::user()->id)
+        $check = null;
+        if($thereferrel_id){
+            $check = ReferalTracking::with('getUserName')->where('refered_user',$thereferrel_id)
                                         ->select('user')->get();
+        }
         // return $check;
         $data = [];
-        $totalUser = [];
+        $totalUsr = [];
                     $total2nd = 0;
                     $range2 = 0;
                     $data2nd = [];
@@ -345,7 +393,7 @@ class HomeController extends Controller
         if($check != null){
             foreach($check as $val){
                 $data[]=$val->user;
-                $totalUser[]=$val->user;
+                $totalUsr[]=$val->user;
             }
         }
 
@@ -360,7 +408,7 @@ class HomeController extends Controller
 
         foreach($check2ndTier as $val){
             $data2nd[]=$val->user;
-            $totalUser[]=$val->user;
+            $totalUsr[]=$val->user;
         }
         if ($check2ndTier != null) {
             $total2nd+=count($check2ndTier);
@@ -376,7 +424,7 @@ class HomeController extends Controller
 
             foreach($check3rdTier as $val){
                 $data3rd[]=$val->user;
-                $totalUser[]=$val->user;
+                $totalUsr[]=$val->user;
             }
             if ($check3rdTier != null) {
                 $total3rd+=count($check3rdTier);
@@ -390,7 +438,7 @@ class HomeController extends Controller
 
                 foreach($check4thTier as $val){
                     $data4th[]=$val->user;
-                    $totalUser[]=$val->user;
+                    $totalUsr[]=$val->user;
                 }
                 if ($check4thTier != null) {
                     $total4th+=count($check4thTier);
@@ -436,12 +484,11 @@ class HomeController extends Controller
         }else{
             $viewJob = 0;
         }
-        // return count($totalUser);
-
-        $availableJob = JobPost::where('job_status',1)->where('job_type',1)->where('job_worker','!=',0)->where('user_id','!=',Auth()->user()->id)->get()->take($viewJob);
-        $normalJob = JobPost::where('job_status',1)->where('job_worker','!=',0)->where('user_id','!=',Auth()->user()->id)->where('job_type',2)->orderBy('id', 'DESC')->paginate(5);
+        // return count($totalUsr);
+        $availableJob = JobPost::where('job_status',1)->where('job_type',1)->where('job_worker','!=',0)->where('user_id','!=',Auth::user()->id)->get()->take($viewJob);
+        $normalJob = JobPost::where('job_status',1)->where('job_worker','!=',0)->where('user_id','!=', Auth::user()->id)->where('job_type', 2)->orderBy('id', 'DESC')->paginate(5);
         $appliedjobStatus = new AppliedJobStatus();
-        return view('backend.availablejob',compact('availableJob','appliedjobStatus','totalUser','normalJob'));
+        return view('backend.availablejob',compact('availableJob','appliedjobStatus','totalUsr','normalJob','thereferrel_id'));
     }
     public function AvailableJobById($id){
         $availableJobId = JobPost::find(Crypt::decrypt($id));
@@ -456,17 +503,26 @@ class HomeController extends Controller
 
     public function submitTaskStore(Request $request){
         $request->validate([
-            'proof_text'        => 'required | string| max:500',
-            'proof_image'        => 'max:800'
+            'proof_text'        => 'required | string| max:1000',
+            'proof_image'        => 'max:1024'
         ]);
         DB::beginTransaction();
         try {
-            $submitTask                  = new SubmitTask();
-            $submitTask->user_id         = $request->user_id;
-            $submitTask->client_id       = $request->client_id;
-            $submitTask->job_id          = $request->job_id;
-            $submitTask->proof_text      = $request->proof_text;
+
+            $appliedjobstatus = new AppliedJobStatus();
+            $appliedjobstatus->user_id = $request->user_id;
+            $appliedjobstatus->jobpost_id = $request->job_id;
+            $appliedjobstatus->status = 0;
+            $appliedjobstatus->save();
+            $appliedTableId = $appliedjobstatus->id;
+
+            $submitTask                 = new SubmitTask();
+            $submitTask->user_id        = $request->user_id;
+            $submitTask->client_id      = $request->client_id;
+            $submitTask->job_id         = $request->job_id;
+            $submitTask->proof_text     = $request->proof_text;
             $submitTask->job_price      = $request->job_price;
+            $submitTask->applied_job_statuses_id = $appliedTableId;
             if ($request->hasFile('proof_image')) {
                 $path = 'images/proofImage/';
                 if (!is_dir($path)) {
@@ -517,11 +573,8 @@ class HomeController extends Controller
                 $notification = array('message' => 'You already submitted the task, try another job!', 'alert-type'=> 'error');
                 return redirect()->back()->with($notification);
             }
-            $appliedjobstatus = new AppliedJobStatus();
-            $appliedjobstatus->user_id = $request->user_id;
-            $appliedjobstatus->jobpost_id = $request->job_id;
-            $appliedjobstatus->status = 0;
-            $appliedjobstatus->save();
+
+
 
             $jobpostWorkersNumberUpdate = JobPost::find($request->job_id);
             $jobpostWorkersNumberUpdate->job_worker = $jobpostWorkersNumberUpdate->job_worker-1;
@@ -552,7 +605,7 @@ class HomeController extends Controller
     public function submissionPending(){
         $jobPower = null;
         if(Auth::user()->role_id != null){
-            $submissionpending = SubmitTask::with("getUserName")->where('revision',null)->where('status',null)->get();
+            $submissionpending = SubmitTask::with("getUserName")->where('revision',null)->where('status',null)->paginate(15);
         if(Auth::user()->role_id == 2){
             $token = AdminDetail::where('user_id','=',Auth::user()->id)->where('job_power','=',1)->first();
             if($token != null){
@@ -564,7 +617,7 @@ class HomeController extends Controller
         }else{
            $submissionpending = SubmitTask::with("getUserName")->where('client_id',Auth::user()->id)
                                                                 ->where('revision',null)
-                                                                ->where('status',null)->get();
+                                                                ->where('status',null)->paginate(15);
         }
         // return $submissionpending;
         return view('backend.submissionpending',compact('submissionpending','jobPower'));
@@ -572,7 +625,9 @@ class HomeController extends Controller
     public function submitTaskStatus(Request $request){
         $statusCondition = SubmitTask::find($request->hiddenAccept);
         $jobPostId = JobPost::find($request->hiddenJobId);
-
+        $appliedStatus = AppliedJobStatus::find($statusCondition->applied_job_statuses_id);
+        $appliedStatus->status = 1;
+        $appliedStatus->save();
         $candidateUser = User::find($request->hiddenUserId);
         if($statusCondition){
             $statusCondition->status = 1;
@@ -648,9 +703,9 @@ class HomeController extends Controller
     }
 
     public function completedJob(){
-
-        $completedJob = SubmitTask::with("getUserName")->where('client_id',Auth::user()->id)
+        $completedJob = SubmitTask::with("getUserName","getJob")->where('client_id',Auth::user()->id)
                                                        ->where('status',1)->get();
+        // return $completedJob;
         return view('backend.completedtask',compact('completedJob'));
     }
 

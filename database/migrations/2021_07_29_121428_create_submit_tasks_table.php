@@ -18,6 +18,7 @@ class CreateSubmitTasksTable extends Migration
             $table->unsignedInteger('user_id')->nullable();
             $table->unsignedInteger('client_id')->nullable();
             $table->unsignedInteger('job_id')->nullable();
+            $table->unsignedInteger('applied_job_statuses_id')->nullable();
             $table->text('proof_text')->nullable();
             $table->string('proof_image')->nullable();
             $table->float('job_price')->nullable();

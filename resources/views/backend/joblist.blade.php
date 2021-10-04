@@ -39,6 +39,7 @@
                                     <thead>
                                         <tr class="text-center">
                                             <th width="10%">Job Title</th>
+                                            <th width="10%">User Name</th>
                                             <th width="10%">Job Type</th>
                                             <th width="10%">Job Price</th>
                                             <th width="10%">Job Visibility</th>
@@ -54,6 +55,7 @@
                                         @endphp
                                         <tr class="text-center item{{ $list->id }}">
                                             <td>{{ $list->job_title }}</td>
+                                            <td>{{ $list->getUser->username }}</td>
                                             <td>{{ $jobType }}</td>
                                             <td class="costEdit">
                                                 <p>${{ $list->job_price }}</p>

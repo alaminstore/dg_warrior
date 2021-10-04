@@ -8,7 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>DG Warrior</title>
     <!-- Favicon -->
-    <link rel="icon" href="{{asset('logo.svg')}}" type="image/x-icon"/>
+    <link rel="icon" href="{{asset('logo_white.svg')}}" type="image/x-icon"/>
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
     <!-- Fonts -->
@@ -21,10 +21,10 @@
 </head>
 <body class="bg-dark">
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    <img src="{{ asset('logo.svg') }}" class="img-fluid" width="50" height="auto" alt="logo">
+                    <img src="{{ asset('logo_white.svg') }}" class="img-fluid" width="70" height="auto" alt="logo">
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>

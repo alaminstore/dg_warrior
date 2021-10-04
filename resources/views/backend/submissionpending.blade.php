@@ -1,6 +1,6 @@
 @extends('backend.home')
 @section('title','DG Warrior | Pending Submission')
-<style>.swal2-icon.swal2-warning {font-size: 15px!important;}.media-body:hover {background: #141313;}.modal-footer {display: flex;align-items: center!important;justify-content: center!important;padding: 1rem;border-top: 1px solid #e8e8f7;border-bottom-right-radius: 0.3rem;border-bottom-left-radius: 0.3rem;}.showDetails {display: flex;flex-wrap: wrap;justify-content: center;align-items: center;}</style>
+<style>.swal2-icon.swal2-warning {font-size: 15px!important;}.media-body:hover {background: #141313;}.modal-footer {display: flex;align-items: center!important;justify-content: center!important;padding: 1rem;border-top: 1px solid #e8e8f7;border-bottom-right-radius: 0.3rem;border-bottom-left-radius: 0.3rem;}.showDetails {display: flex;flex-wrap: wrap;justify-content: center;align-items: center;}.paginateMiddle {display: flex;justify-content: center;align-items: baseline;}</style>
 @section('content')
 <!-- Main Content-->
 <div class="main-content pt-0">
@@ -25,7 +25,10 @@
                         <div class="card-body submissionDiv">
                             <div>
                                 <h6 class="main-content-label mb-1">{{Auth::user()->role_id != null ? "User's Job's Task waiting list": "My Issued Task Submission : "}}</h6>
-                                <p class="text-muted card-sub-title">AInspect and accept task submission that met your requirements, reject if not met (Respondent will not receive incentives rewards). </p>
+                                <p class="text-muted card-sub-title">
+                                    Inspect and accept the task submitted, leave a comment if the requirement is not met. <br>
+                                    Reject the task if it has not been carried out in due diligence (respondent will not receive task rewards).
+                                </p>
                             </div>
                             @if (count($submissionpending) != 0)
                               @foreach ($submissionpending as $item)
@@ -51,6 +54,7 @@
                                   </div>
                                 </div><br>
                               @endforeach
+                               <div class="paginateMiddle">{{ $submissionpending->links() }}</div>
                             @else
                             <div class="card bg-light text-white">
                               <div class="card-body text-center display-4" style="font-size: 15px;color:#d49a2d;">
@@ -155,7 +159,6 @@
 @endsection
 @section('js')
 <script>
-  //View===============================================================
   $(document).on('click', '.proofOfTask', function () {
         let id = $(this).attr('data-id');
         // console.log('id--', id);
@@ -186,7 +189,6 @@
             }
         });
     });
-  //View===============================================================
   $(document).on('click', '.revisionSystem', function () {
     let id = $(this).attr('data-id');
     // console.log('id--', id);

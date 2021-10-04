@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use DB;
+use Illuminate\Support\Facades\Redirect;
 
 class RegisterController extends Controller
 {
@@ -91,18 +92,34 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $info = null;
+        $theLeaderInfo = null;
+        if($data['referrer_code'] != null){
+            $theLeaderInfo = User::where('username',$data['referrer_code'])->first();
+            if($theLeaderInfo){
+             $info =  $theLeaderInfo->id;
+            }else{
+             // return Redirect::back()->withErrors(['message' => 'Please provide correct refferal code otherwise leave it empty']);
+             $info = null;
+            }
+         }
         $referrer = User::whereUsername(session()->pull('referrer'))->first();
 
         if($referrer != null){
             $core_number = User::where('referrer_id', $referrer->id)->get();
             $leader = User::where('id',$referrer->id)->first();
+        }else{
+            if($theLeaderInfo != null){
+                $core_number = User::where('referrer_id', $info)->get();
+                $leader = User::where('id',$info)->first();
+            }
         }
         $user =  User::create([
             'name'        => $data['name'],
             'username'    => $data['username'],
             'gender'      => $data['gender'],
             'email'       => $data['email'],
-            'referrer_id' => $referrer ? $referrer->id : null,
+            'referrer_id' =>($referrer) ? $referrer->id : (($info)  ? $info : null),
             'password'    => Hash::make($data['password']),
             'company_name' => $data['company_name'],
             'birth_date'  => $data['birth_date'],
@@ -113,7 +130,7 @@ class RegisterController extends Controller
             'country'     => $data['country'],
             'subscription'=> $data['subscription'],
         ]);
-        if($referrer != null){
+        if($referrer != null || $theLeaderInfo != null){
         $leader->core = count($core_number)+1;
         $currentUser = $leader->id;
         if($leader->subscription == 1){
@@ -170,7 +187,7 @@ class RegisterController extends Controller
     }
         $referal = array();
         $referal['user'] = $user->id;
-        $referal['refered_user'] = $referrer ? $referrer->id : null;
+        $referal['refered_user'] = ($referrer) ? $referrer->id : (($info)  ? $info : null);
         $referaltracking = DB::table('referal_trackings')->insert($referal);
         return $user;
     }

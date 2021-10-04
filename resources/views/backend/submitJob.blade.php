@@ -51,7 +51,7 @@
                             @endif
                         @endif
 
-                            <form action="{{route('jobsubmit.store')}}" method="post" enctype="multipart/form-data">
+                            <form action="{{route('jobsubmit.store')}}" method="post" id="submitJobOption" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group row flex_css">
                                 <label for="job_title" class="col-sm-3 col-form-label"></label>
@@ -79,18 +79,18 @@
                             </div>
 
                             <div class="form-group row flex_css">
-                                <label for="job_price" class="col-sm-3 col-form-label">Proof By Screenshot:</label>
+                                <label for="proof_image" class="col-sm-3 col-form-label">Proof By Screenshot:</label>
                                 <div class="col-md-9">
-                                    <input type="file" name="proof_image" id="proof_image" data-allowed-file-extensions="png jpg jpeg"  class="dropify"/>
+                                    <input type="file" name="proof_image" id="proof_image" data-max-file-size="1M" data-allowed-file-extensions="png jpg jpeg jfif"  class="dropify"/>
                                 </div>
                             </div>
 
                             <div class="form-group submitForm">
                                 <div>
-                                    <button type="submit" id="submitPost" class="btn btn-primary my-2 btn-icon-text">
-                                        Submit Here
+                                    <button type="submit" id="submitPost" class="btn btn-primary my-2 btn-icon-text btn-sm">
+                                        <i class="fa fa-paper-plane-o" aria-hidden="true"></i> Submit Here
                                     </button>
-                                    <button type="reset" class="btn btn-square btn-light waves-effect m-l-5">
+                                    <button type="reset" class="btn btn-square btn-light waves-effect m-l-5 btn-sm">
                                         Cancel
                                     </button>
                                 </div>
@@ -117,5 +117,14 @@
     $(document).ready( function () {
         $('#proof_image').dropify();
     });
+    $("#submitJobOption").validate({
+            rules: {
+                proof_text: {
+                    required:true,
+                    minlength: 10,
+                    maxlength: 1000
+                }
+            }
+        });
 </script>
 @endsection

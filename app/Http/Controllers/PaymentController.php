@@ -34,6 +34,7 @@ class PaymentController extends Controller
                 $theLeader = User::where('id','=',$theUser->referrer_id)->first();
                 if($theLeader){
                     $theLeader->manager_task_access = 1;
+                    $theLeader->sales_achieved += $theUser->waiting_load_balance;
                     $DgManagerDue = new DgManagerDue();
                     $DgManagerDue->user_id = $theLeader->id;
                     $DgManagerDue->manager_due_payment	= .08*$theUser->waiting_load_balance;
@@ -44,6 +45,10 @@ class PaymentController extends Controller
             }
             $theUser->balance+= $theUser->waiting_load_balance;
             $theUser->recharge+= $theUser->waiting_load_balance;
+            $theUser->exp+= $theUser->waiting_load_balance;
+            $expLast = ($theUser->exp-50)/3;
+            $levelRecheck = pow($expLast, (1/3));
+            $theUser->level = (int) $levelRecheck;
             $theUser->waiting_load_code = null;
             $theUser->waiting_load_balance = null;
             $theUser->save();

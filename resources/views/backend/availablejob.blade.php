@@ -43,7 +43,7 @@
                   <div class="card custom-card overflow-hidden">
                      <div class="card-header border-bottom-0">
                         <div>
-                           <label class="main-content-label mb-2">These Job Are Available Only For You</label> <span class="d-block tx-12 mb-0 text-muted">The Project Budget is a tool used by project managers to estimate the total cost of a project</span>
+                           <label class="main-content-label mb-2">These Job Are Available Only For You</label> <span class="d-block tx-12 mb-0 text-muted">Once you have completed the job, take a screenshot as prove.</span>
                         </div>
                      </div>
                      <div class="card-body">
@@ -55,40 +55,40 @@
                                  <?php
                                     $checking =  App\AppliedJobStatus::where('jobpost_id',$available->id)->where('user_id','=',Auth::user()->id)->first();
                                     if($checking != null){?>
-                                       <li class="list-group-item">
-                                          @php
-                                             $jobType =  $available->job_type == 1 ? "Director Task":"";
-                                          @endphp
-                                          <div class="card">
-                                             <div class="card-body">
-                                                <div class="jobtitle"><span><b>Job Title: </b></span> {{ $available->job_title }}
-                                                   <?php if($available->job_type == 1){ ?> <sup>{{$jobType }}</sup><?php } ?>
-                                                </div>
-                                                <div class="w_p">
-                                                   <div class="jobWorkers">
-                                                      <p><b>Respondent Needed: </b><span class="bg">{{$available->already_applied == null ? "0" : $available->already_applied}} <span style="font-size: 20px;color:rgb(119, 255, 119)"><b>/</b></span> {{ $available->job_worker + $available->already_applied }}</p>
-                                                   </div>
-                                                   <div class="jobPrice">
-                                                      {{-- @php
-                                                         $eachReward = $available->job_price/ $available->job_worker
-                                                      @endphp --}}
-                                                      <p><b>Reward: </b><span class="bg">${{
-                                                        number_format((float)$available->job_price, 2, '.', '')
-                                                      }}
-                                                      </span></p>
-                                                   </div>
-                                                </div>
-                                                <div class="detailsnull text-center">
-                                                   Already Applied
-                                                </div>
-
-                                             </div>
-                                             </div>
-                                       </li>
+                                        @if ($checking->status == 0)
+                                        <li class="list-group-item">
+                                           @php
+                                              $jobType =  $available->job_type == 1 ? "Director Task":"";
+                                           @endphp
+                                           <div class="card">
+                                              <div class="card-body">
+                                                 <div class="jobtitle"><span><b>Job Title: </b></span> {{ $available->job_title }}
+                                                    <?php if($available->job_type == 1){ ?> <sup>Required Rank:  {{$jobType }}</sup><?php } ?>
+                                                 </div>
+                                                 <div class="w_p">
+                                                    <div class="jobWorkers">
+                                                       <p><b>Respondent Needed: </b><span>{{$available->already_applied == null ? "0" : $available->already_applied}} <span style="font-size: 20px;color:rgb(119, 255, 119)"><b>/</b></span> {{ $available->job_worker + $available->already_applied }}</p>
+                                                    </div>
+                                                    <div class="jobPrice">
+                                                       <p><b>Reward: </b><span class="bg">${{
+                                                         number_format((float)$available->job_price, 2, '.', '')
+                                                       }}
+                                                       </span></p>
+                                                    </div>
+                                                 </div>
+                                                 <div class="detailsnull text-center">
+                                                    Already Applied
+                                                 </div>
+                                              </div>
+                                            </div>
+                                        </li>
+                                        @endif
                                     <?php }else{?>
                                         @if ($available->job_visibility == 2)
-                                        @foreach ($totalUser as $refUser )
-                                            @if ($available->user_id == $refUser)
+                                         @if ($available->user_id == $thereferrel_id)
+                                        @foreach ($totalUsr as $refUser)
+                                            {{-- @if ($available->user_id == $refUser) --}}
+                                            @if ($refUser == Auth::user()->id)
                                                 <li class="list-group-item">
                                                     @php
                                                     $jobType =  $available->job_type == 1 ? "Director Task":"";
@@ -96,12 +96,12 @@
                                                     <div class="card">
                                                     <div class="card-body">
                                                         <div class="jobtitle"><span><b>Job Title: </b></span> {{ $available->job_title }}
-                                                            <?php if($available->job_type == 1){ ?> <sup>{{$jobType }}</sup><?php } ?>
+                                                            <?php if($available->job_type == 1){ ?> <sup>Required Rank:  {{$jobType }}</sup><?php } ?>
                                                         </div>
                                                         <div class="w_p">
                                                             <div class="jobWorkers">
 
-                                                                <p><b>Respondent Needed: </b><span class="bg">{{$available->already_applied == null ? "0" : $available->already_applied}} <span style="font-size: 20px;color:rgb(119, 255, 119)"><b>/</b></span> {{ $available->job_worker + $available->already_applied }}</p>
+                                                                <p><b>Respondent Needed: </b><span>{{$available->already_applied == null ? "0" : $available->already_applied}} <span style="font-size: 20px;color:rgb(119, 255, 119)"><b>/</b></span> {{ $available->job_worker + $available->already_applied }}</p>
 
                                                             </div>
                                                             <div class="jobPrice">
@@ -122,6 +122,7 @@
 
                                             @endif
                                         @endforeach
+                                         @endif
                                         @else
                                         <li class="list-group-item">
                                             @php
@@ -130,11 +131,11 @@
                                             <div class="card">
                                                <div class="card-body">
                                                   <div class="jobtitle"><span><b>Job Title: </b></span> {{ $available->job_title }}
-                                                     <?php if($available->job_type == 1){ ?> <sup>{{$jobType }}</sup><?php } ?>
+                                                     <?php if($available->job_type == 1){ ?> <sup> Required Rank: {{$jobType }}</sup><?php } ?>
                                                   </div>
                                                   <div class="w_p">
                                                      <div class="jobWorkers">
-                                                        <p><b>Respondent Needed: </b><span class="bg">{{$available->already_applied == null ? "0" : $available->already_applied}} <span style="font-size: 20px;color:rgb(119, 255, 119)"><b>/</b></span> {{ $available->job_worker + $available->already_applied }}</p>
+                                                        <p><b>Respondent Needed: </b><span>{{$available->already_applied == null ? "0" : $available->already_applied}} <span style="font-size: 20px;color:rgb(119, 255, 119)"><b>/</b></span> {{ $available->job_worker + $available->already_applied }}</p>
                                                      </div>
                                                      <div class="jobPrice">
 
@@ -167,37 +168,48 @@
                                --}}
 							  <div class="clr"></div>
                               @if (!empty($normalJob))
-                                 @foreach ($normalJob as $available )
+                                 @foreach ($normalJob as $available)
                                  <?php
                                     $checking =  App\AppliedJobStatus::where('jobpost_id',$available->id)->where('user_id','=',Auth::user()->id)->first();
                                     if($checking != null){?>
-                                       <li class="list-group-item">
-                                          @php
-                                             $jobType =  $available->job_visibility == 4 ? "DG Manager Task":"";
-                                          @endphp
-                                          <div class="card">
-                                             <div class="card-body">
-                                                <div class="jobtitle"><span><b>Job Title: </b></span> {{ $available->job_title }}<sup style="font-size:9px;color:#000;">{{$available->job_visibility==4 ? "DG Manager Task":""}} {{$available->job_visibility==1 ? "Normal Task":""}} {{$available->job_visibility==3 ? "Executive Task":""}}</sup>
+                                    @if ($checking->status == 0)
+                                    <li class="list-group-item">
+                                       @php
+                                          $jobType =  $available->job_visibility == 4 ? "DG Manager Task":"";
+                                       @endphp
+                                       <div class="card">
+                                          <div class="card-body">
+                                             <div class="jobtitle"><span><b>Job Title: </b></span> {{ $available->job_title }} <sup style="font-size:9px;color:#000;"> Required Rank:  {{$available->job_visibility==4 ? "DG Manager Task":""}} {{$available->job_visibility==1 ? "DG Warrior Task":""}} {{$available->job_visibility==3 ? "Executive Task":""}}</sup>
 
+                                             </div>
+                                             <div class="w_p">
+                                                <div class="jobWorkers">
+                                                 <p><b>Respondent Needed: </b><span>{{$available->already_applied == null ? "0" : $available->already_applied}} <span style="font-size: 20px;color:rgb(119, 255, 119)"><b>/</b></span> {{ $available->job_worker + $available->already_applied }}</p>
                                                 </div>
-                                                <div class="w_p">
-                                                   <div class="jobWorkers">
-                                                    <p><b>Respondent Needed: </b><span class="bg">{{$available->already_applied == null ? "0" : $available->already_applied}} <span style="font-size: 20px;color:rgb(119, 255, 119)"><b>/</b></span> {{ $available->job_worker + $available->already_applied }}</p>
-                                                   </div>
-                                                   <div class="jobPrice">
+                                                @if ($available->job_visibility == 4)
+                                                <div class="jobPrice">
+                                                    <p><b>Reward: </b><span class="bg">$ Topup Percentage
+                                                    </span></p>
+                                                 </div>
+                                                 @else
+                                                 <div class="jobPrice">
+                                                    <p><b>Reward: </b><span class="bg">${{
+                                                    number_format((float)$available->job_price, 2, '.', '')
+                                                    }}
+                                                    </span></p>
+                                                </div>
+                                                @endif
 
-                                                      <p><b>Reward: </b><span class="bg">${{
-                                                        number_format((float)$available->job_price, 2, '.', '')
-                                                      }}
-                                                      </span></p>
-                                                   </div>
-                                                </div>
-                                                <div class="detailsnull text-center">
-                                                   Already Applied
-                                                </div>
+
+
                                              </div>
+                                             <div class="detailsnull text-center">
+                                                Already Applied
                                              </div>
-                                       </li>
+                                          </div>
+                                          </div>
+                                    </li>
+                                    @endif
                                     <?php }else{?>
 {{-- start... --}}
                                     @if ($available->job_issuer_rank == 10)
@@ -209,23 +221,31 @@
                                                     @endphp
                                                     <div class="card">
                                                     <div class="card-body">
-                                                        <div class="jobtitle"><span><b>Job Title: </b></span> {{ $available->job_title }}<sup style="background: rgb(17, 121, 17);color:#fff;border:1px solid green;">{{$jobType }}</sup></div>
+                                                        <div class="jobtitle"><span><b>Job Title: </b></span> {{ $available->job_title }} <sup style="background: rgb(17, 121, 17);color:#fff;border:1px solid green;">Required Rank:  {{$jobType }}</sup></div>
                                                         <div class="w_p">
                                                             <div class="jobWorkers">
-                                                                <p><b>Respondent Needed: </b><span class="bg">{{$available->already_applied == null ? "0" : $available->already_applied}} <span style="font-size: 20px;color:rgb(119, 255, 119)"><b>/</b></span> {{ $available->job_worker + $available->already_applied }}</p>
+                                                                <p><b>Respondent Needed: </b><span>{{$available->already_applied == null ? "0" : $available->already_applied}} <span style="font-size: 20px;color:rgb(119, 255, 119)"><b>/</b></span> {{ $available->job_worker + $available->already_applied }}</p>
                                                             </div>
                                                             <div class="jobPrice">
-                                                                <p><b>Reward: </b><span class="bg">${{
-                                                                number_format((float)$available->job_price, 2, '.', '')
-                                                                }}
+                                                                <p><b>Reward: </b><span class="bg">$ Topup Percentage
                                                                 </span></p>
                                                             </div>
                                                         </div>
+                                                        @php
+                                                            $dueAvailableorNot = App\DgManagerDue::where('user_id',Auth::user()->id)->first();
+                                                        @endphp
+                                                        @if ($dueAvailableorNot)
                                                         <div class="details text-center">
                                                             <a href="{{ url('available-job', [Crypt::encrypt($available->id)]) }}" type="button" class="btn btn-info btn-sm" >
                                                             View Details
                                                             </a>
                                                         </div>
+                                                          @else
+                                                          <div class="details text-center">
+                                                            <button type="button" class="btn btn-dark btn-sm" data-toggle="tooltip" data-placement="top" title="No Top Up yet from your team."><i class="fa fa-angle-double-right"></i> View Details</button>
+                                                          </div>
+                                                        @endif
+
                                                         </div>
                                                     </div>
                                                 </li>
@@ -238,15 +258,13 @@
                                                     @endphp
                                                     <div class="card">
                                                     <div class="card-body">
-                                                        <div class="jobtitle"><span><b>Job Title: </b></span> {{ $available->job_title }}<sup style="background: rgb(17, 121, 17);color:#fff;border:1px solid green;">{{$jobType }}</sup></div>
+                                                        <div class="jobtitle"><span><b>Job Title: </b></span> {{ $available->job_title }} <sup style="background: rgb(17, 121, 17);color:#fff;border:1px solid green;"> Required Rank:  {{$jobType }}</sup></div>
                                                         <div class="w_p">
                                                             <div class="jobWorkers">
-                                                                <p><b>Respondent Needed: </b><span class="bg">{{$available->already_applied == null ? "0" : $available->already_applied}} <span style="font-size: 20px;color:rgb(119, 255, 119)"><b>/</b></span> {{ $available->job_worker + $available->already_applied }}</p>
+                                                                <p><b>Respondent Needed: </b><span>{{$available->already_applied == null ? "0" : $available->already_applied}} <span style="font-size: 20px;color:rgb(119, 255, 119)"><b>/</b></span> {{ $available->job_worker + $available->already_applied }}</p>
                                                             </div>
                                                             <div class="jobPrice">
-                                                                <p><b>Reward: </b><span class="bg">${{
-                                                                number_format((float)$available->job_price, 2, '.', '')
-                                                                }}
+                                                                <p><b>Reward: </b><span class="bg">$ Topup Percentage
                                                                 </span></p>
                                                             </div>
                                                         </div>
@@ -267,15 +285,13 @@
                                                 @endphp
                                                 <div class="card">
                                                 <div class="card-body">
-                                                    <div class="jobtitle"><span><b>Job Title: </b></span> {{ $available->job_title }}<sup style="background: rgb(17, 121, 17);color:#fff;border:1px solid green;">{{$jobType }}</sup></div>
+                                                    <div class="jobtitle"><span><b>Job Title: </b></span> {{ $available->job_title }} <sup style="background: rgb(17, 121, 17);color:#fff;border:1px solid green;">Required Rank:  {{$jobType }}</sup></div>
                                                     <div class="w_p">
                                                         <div class="jobWorkers">
-                                                            <p><b>Respondent Needed: </b><span class="bg">{{$available->already_applied == null ? "0" : $available->already_applied}} <span style="font-size: 20px;color:rgb(119, 255, 119)"><b>/</b></span> {{ $available->job_worker + $available->already_applied }}</p>
+                                                            <p><b>Respondent Needed: </b><span>{{$available->already_applied == null ? "0" : $available->already_applied}} <span style="font-size: 20px;color:rgb(119, 255, 119)"><b>/</b></span> {{ $available->job_worker + $available->already_applied }}</p>
                                                         </div>
                                                         <div class="jobPrice">
-                                                            <p><b>Reward: </b><span class="bg">${{
-                                                            number_format((float)$available->job_price, 2, '.', '')
-                                                            }}
+                                                            <p><b>Reward: </b><span class="bg">$ Topup Percentage
                                                             </span></p>
                                                         </div>
                                                     </div>
@@ -295,10 +311,10 @@
                                                 @endphp
                                                 <div class="card">
                                                 <div class="card-body">
-                                                    <div class="jobtitle"><span><b>Job Title: </b></span> {{ $available->job_title }}<sup style="background: rgb(46, 93, 192);color:#fff;border:1px solid green;">{{$jobType }}</sup></div>
+                                                    <div class="jobtitle"><span><b>Job Title: </b></span> {{ $available->job_title }} <sup style="background: rgb(46, 93, 192);color:#fff;border:1px solid green;">Required Rank: {{$jobType }}</sup></div>
                                                     <div class="w_p">
                                                         <div class="jobWorkers">
-                                                            <p><b>Respondent Needed: </b><span class="bg">{{$available->already_applied == null ? "0" : $available->already_applied}} <span style="font-size: 20px;color:rgb(119, 255, 119)"><b>/</b></span> {{ $available->job_worker + $available->already_applied }}</p>
+                                                            <p><b>Respondent Needed: </b><span>{{$available->already_applied == null ? "0" : $available->already_applied}} <span style="font-size: 20px;color:rgb(119, 255, 119)"><b>/</b></span> {{ $available->job_worker + $available->already_applied }}</p>
                                                         </div>
                                                         <div class="jobPrice">
                                                             <p><b>Reward: </b><span class="bg">${{
@@ -325,10 +341,10 @@
                                                 @endphp
                                                 <div class="card">
                                                 <div class="card-body">
-                                                    <div class="jobtitle"><span><b>Job Title: </b></span> {{ $available->job_title }}<sup style="background: rgb(17, 121, 17);color:#fff;border:1px solid green;">{{$jobType }}</sup></div>
+                                                    <div class="jobtitle"><span><b>Job Title: </b></span> {{ $available->job_title }} <sup style="background: rgb(46, 93, 192);color:#fff;border:1px solid green;">Required Rank: {{$jobType }}</sup></div>
                                                     <div class="w_p">
                                                         <div class="jobWorkers">
-                                                            <p><b>Respondent Needed: </b><span class="bg">{{$available->already_applied == null ? "0" : $available->already_applied}} <span style="font-size: 20px;color:rgb(119, 255, 119)"><b>/</b></span> {{ $available->job_worker + $available->already_applied }}</p>
+                                                            <p><b>Respondent Needed: </b><span>{{$available->already_applied == null ? "0" : $available->already_applied}} <span style="font-size: 20px;color:rgb(119, 255, 119)"><b>/</b></span> {{ $available->job_worker + $available->already_applied }}</p>
                                                         </div>
                                                         <div class="jobPrice">
                                                             <p><b>Reward: </b><span class="bg">${{
@@ -344,24 +360,24 @@
                                                 </div>
                                             </li>
                                          @endif
-
                                      @else
-
                                        @if ($available->job_visibility == 2)
-                                        @foreach ($totalUser as $refUser )
-                                            @if ($available->user_id == $refUser)
+                                         @if ($available->user_id == $thereferrel_id)
+                                        @foreach ($totalUsr as $refUser)
+                                            {{-- @if ($available->user_id == $refUser) --}}
+                                            @if ($refUser == Auth::user()->id)
                                                 <li class="list-group-item">
                                                     @php
-                                                    $jobType =  $available->job_visibility == 2 ? "Normal Task":"";
+                                                    $jobType =  $available->job_visibility == 2 ? "From My Team":"";
                                                     @endphp
                                                     <div class="card">
                                                     <div class="card-body">
-                                                        <div class="jobtitle"><span><b>Job Title: </b></span> {{ $available->job_title }}<sup style="background:#fff;color:#000">{{$jobType }}</sup>
+                                                        <div class="jobtitle"><span><b>Job Title: </b></span> {{ $available->job_title }} <sup style="background:rgb(143, 99, 99);color:rgb(255, 255, 255)">Required Rank:  {{$jobType }}</sup>
 
                                                         </div>
                                                         <div class="w_p">
                                                             <div class="jobWorkers">
-                                                                <p><b>Respondent Needed: </b><span class="bg">{{$available->already_applied == null ? "0" : $available->already_applied}} <span style="font-size: 20px;color:rgb(119, 255, 119)"><b>/</b></span> {{ $available->job_worker + $available->already_applied }}</p>
+                                                                <p><b>Respondent Needed: </b><span>{{$available->already_applied == null ? "0" : $available->already_applied}} <span style="font-size: 20px;color:rgb(119, 255, 119)"><b>/</b></span> {{ $available->job_worker + $available->already_applied }}</p>
                                                             </div>
                                                             <div class="jobPrice">
                                                                 <p><b>Reward: </b><span class="bg">${{
@@ -378,22 +394,22 @@
                                                         </div>
                                                     </div>
                                                 </li>
-
                                             @endif
                                         @endforeach
+                                          @endif
                                         @else
                                         <li class="list-group-item">
                                             @php
-                                               $jobType =  $available->job_visibility == 1 ? "Normal Task":"";
+                                               $jobType =  $available->job_visibility == 1 ? "DG Warrior Task":"";
                                             @endphp
                                             <div class="card">
                                                <div class="card-body">
-                                                  <div class="jobtitle"><span><b>Job Title: </b></span> {{ $available->job_title }}<sup style="background:#fff;color:#000">{{$jobType }}</sup>
+                                                  <div class="jobtitle"><span><b>Job Title: </b></span> {{ $available->job_title }} <sup style="background:#fff;color:#000">Required Rank: {{$jobType }}</sup>
 
                                                   </div>
                                                   <div class="w_p">
                                                      <div class="jobWorkers">
-                                                        <p><b>Respondent Needed: </b><span class="bg">{{$available->already_applied == null ? "0" : $available->already_applied}} <span style="font-size: 20px;color:rgb(119, 255, 119)"><b>/</b></span> {{ $available->job_worker + $available->already_applied }}</p>
+                                                        <p><b>Respondent Needed: </b><span>{{$available->already_applied == null ? "0" : $available->already_applied}} <span style="font-size: 20px;color:rgb(119, 255, 119)"><b>/</b></span> {{ $available->job_worker + $available->already_applied }}</p>
                                                      </div>
                                                      <div class="jobPrice">
                                                         <p><b>Reward: </b><span class="bg">${{

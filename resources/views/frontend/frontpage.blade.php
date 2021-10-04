@@ -16,34 +16,37 @@
         <div class="row no-gutters">
           <div class="content col-xl-5 d-flex align-items-stretch" data-aos="fade-right">
             <div class="content">
-              <h3>Why are market research and objectives so important</h3>
-              <p>Why are survey objectives and goals so important? How are they used?  What are the benefits? <div class="gap_br"></div> These are important questions. Establishing clear survey goals and objectives is an essential first step in the survey process. This is where to start if you want to engage your survey respondents and get valid feedback that will help you make the right decisions.
+              <h3>What is DG Warrior?</h3>
+                <p><div class="gap_br"></div>The internet is known as a small world where anything can be done without stress. The past few years have proven that the internet technology as got enough room for projects that are ready to simplify the world’s most difficult activities. This led to the pioneering of the different gig/freelance platforms designed for professionals.
+                <br><br><div class="gap_br"></div> The DG warrior is an all-new reward system platform equipped for businesses, organisations or even individuals within the community as a marketplace for job listings by issuer, and work completion by job participant.
+                <br><br><div class="gap_br"></div> All tasks do not require a skillset or particular qualification on DG warrior platform, there is something for everyone; anyone can earn on DG warrior.
               </p>
-              <a href="#" class="about-btn">About us <i class="bx bx-chevron-right"></i></a>
+              {{-- <a href="#" class="about-btn">About us <i class="bx bx-chevron-right"></i></a> --}}
             </div>
           </div>
           <div class="col-xl-7 d-flex align-items-stretch" data-aos="fade-left">
             <div class="icon-boxes d-flex flex-column justify-content-center">
               <div class="row">
                 <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="100">
-                  <i class="bx bx-receipt"></i>
-                  <h4>Survey Research</h4>
-                  <p>Surveys are relatively inexpensive. Online surveys and mobile surveys, in particular, have a very small cost per respondent. <div class="gap_br"></div> Even if incentives are given to respondents, the cost per response is often far less than the cost of administering a paper survey or phone survey, and the number of potential responses can be in the thousands.</p>
+                  <i class="bx bx-face"></i>
+                  <h4>Distribution</h4>
+                  <p>On DG warrior, you do not need special skills. Whether you are skilled or unskilled, you can find tasks on DG warrior. All tasks do not require a skillset or particular qualification on DG warrior platform, there is something for everyone; anyone can earn on DG warrior.
+                  <div class="gap_br"></div> </p>
                 </div>
                 <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="200">
-                  <i class="bx bx-cube-alt"></i>
-                  <h4>Flexible</h4>
-                  <p>Surveys can be administered in many modes, including: online surveys, email surveys, social media surveys, paper surveys, mobile surveys, telephone surveys, and face-to-face interview surveys. <div class="gap_br"></div>  For remote or hard-to-reach respondents, using a mixed mode of survey research may be necessary (e.g. administer both online surveys and paper surveys to collect responses and compile survey results into one data set, ready for analysis).</p>
+                  <i class="bx bxs-group"></i>
+                  <h4>Gathering</h4>
+                  <p>We have dedicated a great deal of time and energy to designing and building this platform and community with the view of enabling everyone to participate and earn rewards without worrying about being screened out or limited as is the case with most of the other popular freelance platforms.</p>
                 </div>
                 <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="300">
-                  <i class="bx bx-images"></i>
-                  <h4>Extensive</h4>
-                  <p>Online surveys are useful in describing the characteristics of a large population. <div class="gap_br"></div> No other research method can provide this broad capability, which ensures a more accurate sample to gather targeted results in which to draw conclusions and make important decisions.</p>
+                  <i class="bx bx-atom"></i>
+                  <h4>Wide Range</h4>
+                  <p>Listed jobs will include a wide range of services, such as objective’s task, survey, challenge, polls, quiz or even experimental research, such that both skilled and unskilled participant can participate.</p>
                 </div>
                 <div class="col-md-6 icon-box" data-aos="fade-up" data-aos-delay="400">
-                  <i class="bx bx-shield"></i>
-                  <h4>Dependable</h4>
-                  <p>The anonymity of surveys allows respondents to answer with more candid and valid answers. To get the most accurate data, you need respondents to be as open and honest as possible with their answers. <div class="gap_br"></div> Surveys conducted anonymously provide an avenue for more honest and unambiguous responses than other types of research methodologies, especially if it is clearly stated that survey answers will remain completely confidential.</p>
+                  <i class="bx bx-gift"></i>
+                  <h4>Rewards</h4>
+                  <p>The DG warrior platform credits (USD) will be used by clients to post jobs on the platform and will also be paid to participant who complete jobs.</p>
                 </div>
               </div>
             </div>
@@ -52,37 +55,7 @@
 
       </div>
     </section>
-    <section id="clients" class="clients">
-      <div class="container" data-aos="zoom-in">
-        <div class="row">
-          <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
-            <img src="frontend/assets/img/clients/client-1.png" class="img-fluid" alt="">
-          </div>
 
-          <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
-            <img src="frontend/assets/img/clients/client-2.png" class="img-fluid" alt="">
-          </div>
-
-          <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
-            <img src="frontend/assets/img/clients/client-3.png" class="img-fluid" alt="">
-          </div>
-
-          <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
-            <img src="frontend/assets/img/clients/client-4.png" class="img-fluid" alt="">
-          </div>
-
-          <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
-            <img src="frontend/assets/img/clients/client-5.png" class="img-fluid" alt="">
-          </div>
-
-          <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center">
-            <img src="frontend/assets/img/clients/client-6.png" class="img-fluid" alt="">
-          </div>
-
-        </div>
-
-      </div>
-    </section>
     <section id="features" class="features" data-aos="fade-up">
       <div class="container">
 
@@ -167,40 +140,42 @@
         <div class="section-title">
           <h2>Services</h2>
           <p>
-            With the assist of decentralised technologies and community contributions, our goal is a broad statement of the primary aim or outcome.  The objectives are specific and measurable steps to meet the goal. The objectives provide a framework for asking the right questions or. As an example, identifying the demographic characteristics of the survey groups is often an important objective.
+          With the assist of our user-friendly platform and community contributions, our goal is a broad statement of the primary aim or outcome. The objectives are specific and measurable steps to meet the goal.
+          The objectives provide a framework for issuing the right job.
+          As an example for market conversion, identifying the demographic characteristics within the community is often an important objective.
           </p>
         </div>
 
         <div class="row">
           <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0" data-aos="fade-up" data-aos-delay="100">
             <div class="icon-box">
-              <div class="icon"><i class="bx bxl-dribbble"></i></div>
-              <h4 class="title"><a href="">AI Analytics</a></h4>
-              <p class="description">Results using AI driven analytics to produce outcome faster</p>
+              <div class="icon"><i class="bx bx-happy-beaming"></i></div>
+              <h4 class="title"><a href="">User Friendly</a></h4>
+              <p class="description">No technical skills needed, create and publish your own job based on your primary aim or outcome</p>
             </div>
           </div>
 
           <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0" data-aos="fade-up" data-aos-delay="200">
             <div class="icon-box">
-              <div class="icon"><i class="bx bx-file"></i></div>
+              <div class="icon"><i class="bx bx-customize"></i></div>
               <h4 class="title"><a href="">Customizations</a></h4>
-              <p class="description">Choose and customize a method to achieve personal/ organisation desire outcome</p>
+              <p class="description">You can easily customize the type of  jobs that suits your demand with our dashboard systems</p>
             </div>
           </div>
 
           <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0" data-aos="fade-up" data-aos-delay="300">
             <div class="icon-box">
-              <div class="icon"><i class="bx bx-tachometer"></i></div>
+              <div class="icon"><i class="bx bx-world"></i></div>
               <h4 class="title"><a href="">Community</a></h4>
-              <p class="description">Tab on millions of our active communities</p>
+              <p class="description">Huge world wide  community of DG Warrior makes targeted outcome more accurate and easier</p>
             </div>
           </div>
 
           <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0" data-aos="fade-up" data-aos-delay="400">
             <div class="icon-box">
-              <div class="icon"><i class="bx bx-layer"></i></div>
-              <h4 class="title"><a href="">Template</a></h4>
-              <p class="description">All questionnaire template are written by experts </p>
+              <div class="icon"><i class="bx bx-coin-stack"></i></div>
+              <h4 class="title"><a href="">Flexible</a></h4>
+              <p class="description">Flexible rewards let you set each completed job reward to bring up the jobs effectiveness</p>
             </div>
           </div>
 
@@ -221,65 +196,58 @@
           <div class="testimonial-item">
             <p>
               <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-              "81% of millennials are checking Twitter at least once a day. The average amount of search queries Twitter receives a day is two billion."
+              "Platform is user friendly and simple to use without any professional skill needed."
               <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-            </p>
-            {{-- <img src="{{asset('logo.png')}}" class="testimonial-img" alt=""> --}}
-            <h3>Digital Marketing</h3>
+            </p><br>
+            <img src="frontend/assets/img/testimonials/testimonials-1.jpg" class="testimonial-img" alt="">
+            <h3>Kristine</h3>
           </div>
 
           <div class="testimonial-item">
             <p>
               <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-              "Do you know? Based on recent stats, it’s estimated that people will spend a collective 3.8 trillion hours using the mobile internet this year, rising to 4.5 trillion hours in 2021.”
+              "Dgwarrior has a great, fresh approach to the business world. It has wide rage of task daily which doesn’t require any knowledge.”
               <i class="bx bxs-quote-alt-right quote-icon-right"></i>
             </p>
-            {{-- <img src="{{asset('logo.png')}}" class="testimonial-img" alt=""> --}}
-            <h3>Digital Marketing</h3>
+            <img src="frontend/assets/img/testimonials/testimonials-2.jpg" class="testimonial-img" alt="">
+            <h3>Maria</h3>
           </div>
           <div class="testimonial-item">
             <p>
               <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-              "Do you know?
-              29% of us believe that “cloud computing” involves a real cloud”
+              "DGWARRIOR have helped my business gain lots of attention by issuing task.”
               <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-            </p>
-            {{-- <img src="{{asset('logo.png')}}" class="testimonial-img" alt=""> --}}
-            <h3>Fun Facts</h3>
+            </p><br>
+            <img src="frontend/assets/img/testimonials/testimonials-3.jpg" class="testimonial-img" alt="">
+            <h3>Ryan</h3>
           </div>
           <div class="testimonial-item">
             <p>
               <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-              “ Do you know?
-              48% of us sing in the shower.
-              ”
+              “I recommend you to use Dg warrior platform. I am using it for month and it is very interesting.”
               <i class="bx bxs-quote-alt-right quote-icon-right"></i>
-            </p>
-            {{-- <img src="{{asset('logo.png')}}" class="testimonial-img" alt=""> --}}
-            <h3>Fun Facts</h3>
-            {{-- <h4>Freelancer</h4> --}}
+            </p><br>
+            <img src="frontend/assets/img/testimonials/testimonials-4.jpg" class="testimonial-img" alt="">
+            <h3>Kelly</h3>
           </div>
           <div class="testimonial-item">
             <p>
               <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-              "Do you know?
-              As a very rough rule of thumb, 200 responses will provide fairly good survey accuracy under most assumptions and parameters of a survey project. 100 responses are probably needed even for marginally acceptable accuracy."
+              " I love my dgwarrior! Easy platform to use, fantastic staff and nothing but great results!"
               <i class="bx bxs-quote-alt-right quote-icon-right"></i>
             </p>
-            <img src="{{asset('logo.png')}}" class="testimonial-img" alt="">
-            <h3>Market Response</h3>
-            {{-- <h4>Entrepreneur</h4> --}}
+            <br>
+            <img src="frontend/assets/img/testimonials/testimonials-5.jpg" class="testimonial-img" alt="">
+            <h3>George</h3>
           </div>
           <div class="testimonial-item">
             <p>
               <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-              “Do you know?
-              Your short-term memory can only hold on to so much information at a time (unless you try one of the simple ways to improve your memory), which is why you use "chunking" to remember long numbers. For instance, if you try to memorize this number: 90655372, you probably naturally thought something like 906-553-72.”
+              “You can really tell that their community is big. They have helped me gained new client in a short amount of time.”
               <i class="bx bxs-quote-alt-right quote-icon-right"></i>
             </p>
-            {{-- <img src="{{asset('logo.png')}}" class="testimonial-img" alt=""> --}}
-            <h3>Studies Facts</h3>
-            {{-- <h4>Entrepreneur</h4> --}}
+            <img src="frontend/assets/img/testimonials/testimonials-6.jpg" class="testimonial-img" alt="">
+            <h3>Nancy</h3>
           </div>
 
         </div>
@@ -303,12 +271,6 @@
                       <h4>Luis Smith</h4>
                       <span>Chief Executive Officer</span>
                     </div>
-                    <div class="social">
-                      <a href=""><i class="fa fa-twitter"></i></a>
-                      <a href=""><i class="fa fa-facebook"></i></a>
-                      <a href=""><i class="fa fa-instagram"></i></a>
-                      <a href=""><i class="fa fa-linkedin"></i></a>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -319,12 +281,6 @@
                     <div class="member-info-content">
                       <h4>Ronnie Fischer</h4>
                       <span>Chief Technical Officer</span>
-                    </div>
-                    <div class="social">
-                        <a href=""><i class="fa fa-twitter"></i></a>
-                        <a href=""><i class="fa fa-facebook"></i></a>
-                        <a href=""><i class="fa fa-instagram"></i></a>
-                        <a href=""><i class="fa fa-linkedin"></i></a>
                     </div>
                   </div>
                 </div>
@@ -337,18 +293,17 @@
                       <h4>Ryan Miller</h4>
                       <span>Managing Director</span>
                     </div>
-                    <div class="social">
-                        <a href=""><i class="fa fa-twitter"></i></a>
-                        <a href=""><i class="fa fa-facebook"></i></a>
-                        <a href=""><i class="fa fa-instagram"></i></a>
-                        <a href=""><i class="fa fa-linkedin"></i></a>
-                    </div>
                   </div>
                 </div>
               </div>
           </div>
         </div>
-
+          <div class="section-title">
+            <h3>About Us</h3>
+              <div class="row content"></div><p><b>Our vision</b> is to build up a community with all industries leaders and professional around the globe to raise human experience by amplifying individual voices. We exist to serve people-their passions, pursuits, and potential. Our product and technologies are design to understand from individual’s perspectives regarding their needs. We believe in equality and the power of elevated voices.</p>
+              <div class="row content"></div><p><b>Our mission</b> is to shape and power the curiosity on what’s next for organisation and communities. Which helps turn insight into action, empowering you to grow, innovate, and change what’s possible to establish a brave and ambitious teams.</p>
+              <div class="row content"></div><p><b>Our core values</b> helps define our culture, shape our business decisions, and inspire our growth. We strive to live our values each and every day, through our choices, words, and actions. </p>
+          </div>
       </div>
     </section>
     <section id="faq" class="faq">
@@ -409,7 +364,7 @@
                 </div>
               </div>
           </div>
-{{-- PLZ Dont't edit from this portion --}}
+          {{-- PLZ Dont't edit from this portion --}}
 
           <div class="col-lg-6 mt-4 mt-md-0">
              {!!Form::open(['class' => 'form-horizontal','id'=>'mailIdSystem'])!!}

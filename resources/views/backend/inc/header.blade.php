@@ -1,4 +1,5 @@
 <!-- Main Header-->
+<style>.paymentBtn {border: 1px solid #fff;border-radius: 5px;box-shadow: 0px 0px 3px 3px #3e612d;}input#cnyValue {background: #b2c6eb;color: #000;border-radius: 1px;}.form-group.payment_lay{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center}.tooltip{z-index:100000000}</style>
 <div class="main-header side-header">
 	<div class="container">
 		<div class="main-header-left">
@@ -12,12 +13,11 @@
 				<a href="{{url('/')}}"><img src="{{asset('logo_white.svg')}}" style="height: 53jpx!important;width: 74px!important;" class="mobile-logo" alt="logo"></a>
 				<a href="{{url('/')}}"><img src="{{asset('logo_white.svg')}}" style="height: 53px!important;width: 74px!important;" class="mobile-logo-dark" alt="logo"></a>
 			</div>
-
 		</div>
 		<div class="main-header-right">
 			<div class="dropdown main-header-notification">
 				@if (Auth::user()->role_id == 1)
-				<a class="nav-link icon" href="">
+				<a class="nav-link icon bellReff" href="">
 					<i class="fa fa-bell header-icons"></i>
 
 					<span class="badge badge-danger nav-link-badge">{{count($jobcount)}}</span>
@@ -69,23 +69,26 @@
 					<a class="dropdown-item border-top" href="/my-profile">
 						<i class="fa fa-user"></i> My Profile
 					</a>
-					{{-- <a class="dropdown-item" href="profile.html">
-						<i class="fe fe-edit"></i> Edit Profile
-					</a>
-					<a class="dropdown-item" href="profile.html">
-						<i class="fe fe-settings"></i> Account Settings
-					</a>
-					<a class="dropdown-item" href="profile.html">
-						<i class="fe fe-settings"></i> Support
-					</a> --}}
+
 					@if (Auth::user()->role_id != null)
 					<a class="dropdown-item" href="{{ url('/user-management') }}">
 						<i class="fa fa-users"></i> User Management
 					</a>
+					<a class="dropdown-item" href="{{ url('/topup-request') }}">
+						<i class="fa fa-usd" aria-hidden="true"></i> Top Up Request
+					</a>
+                    <a class="dropdown-item" href="{{ url('/topup-usdt-completed') }}">
+                        <i class="fa fa-usd" aria-hidden="true"></i> Accepted Top Up
+                    </a>
 					<a class="dropdown-item" href="{{ url('/submission-pending') }}">
 						<i class="fa fa-paperclip"></i> Pending Submission
 					</a>
 					@endif
+                    @if(Auth::user()->role_id == 1)
+                    <a class="dropdown-item" href="{{ url('/all-jobs') }}">
+						<i class="fa fa-briefcase"></i>All Jobs
+					</a>
+                    @endif
 					{{-- @if (Auth::user()->role_id !=1)
 						<a class="dropdown-item" href="{{ url('/activity') }}">
 							<i class="fa fa-compass" aria-hidden="true"></i> Activity
@@ -106,11 +109,15 @@
 			</div>
 			@if (Auth::user()->role_id == null)
 			<div class="main-header-notification" id="balanceRefresh">
-				<a class="nav-link icon" href="#">
-					<div class="balance">
-						${{ Auth::user()->balance != null ? Auth::user()->balance : "0"}}
-					</div>
-				</a>
+
+					<button class="btn btn-sm dollarBtnview" style="border:none;" data-toggle="modal" data-target="#ChoosePayment">
+                    <a class="nav-link icon">
+                        <div class="balance">
+                            ${{ Auth::user()->balance != null ? Auth::user()->balance : "0"}}
+                        </div>
+                    </a>
+                    </button>
+
 			</div>
 			@endif
 			<button class="navbar-toggler navresponsive-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-4"
@@ -257,6 +264,12 @@
 									<a class="dropdown-item" href="{{ url('/user-management') }}">
 										<i class="fa fa-users"></i> User Management
 									</a>
+                                    <a class="dropdown-item" href="{{ url('/topup-request') }}">
+                                        <i class="fa fa-usd" aria-hidden="true"></i> Top Up Request
+                                    </a>
+                                    <a class="dropdown-item" href="{{ url('/topup-usdt-completed') }}">
+                                        <i class="fa fa-usd" aria-hidden="true"></i> Accepted Top Up
+                                    </a>
 									<a class="dropdown-item" href="{{ url('/submission-pending') }}">
 										<i class="fa fa-paperclip"></i> Pending Submission
 									</a>
@@ -279,11 +292,13 @@
                         <div class="dropdown mail-profile-menu">
                             @if (Auth::user()->role_id == null)
                             <div class="main-header-notification">
-                                <a class="nav-link icon" href="#">
-                                    <div class="balance">
-                                        ${{ Auth::user()->balance != null ? Auth::user()->balance : "0"}}
-                                    </div>
-                                </a>
+                                <button class="btn btn-sm dollarBtnview" style="border:none;" data-toggle="modal" data-target="#ChoosePayment">
+                                    <a class="nav-link icon">
+                                        <div class="balance">
+                                            ${{ Auth::user()->balance != null ? Auth::user()->balance : "0"}}
+                                        </div>
+                                    </a>
+                                    </button>
                             </div>
                             @endif
                         </div>
@@ -304,7 +319,7 @@
 			</li>
             @if (Auth::user()->role_id == null)
                 <li class="nav-item">
-                    <a class="nav-link" href="{{url('/job-post')}}"><i class="fa fa-briefcase"></i> Post Task</a>
+                    <a class="nav-link" href="{{url('/job-post')}}"><i class="fa fa-briefcase"></i> Post Job</a>
                 </li>
 			@endif
             @if (Auth::user()->role_id == 1)
@@ -325,10 +340,11 @@
 				<li class="nav-item">
 					<a class="nav-link" href="{{url('/withdraw-completed')}}"><span style="font-size:18px;">&#x1F4B0;</span>&nbsp; Withdraw Completed <sup style='color:red;'>{{ count($withdrawCompleted) }}</sup></a>
 				</li>
+
 			@endif
 			@if (Auth::user()->role_id == null)
 				<li class="nav-item">
-					<a class="nav-link" href="{{url('/available-job')}}"><i class="fa fa-clock-o"></i>Available Task</a>
+					<a class="nav-link" href="{{url('/available-job')}}"><i class="fa fa-clock-o"></i>Available Job</a>
 				</li>
 				<li class="nav-item" id="postedJobRefresh">
 					<a class="nav-link" href="{{url('/posted-job')}}"><i class="fa fa-file"></i> My Posted Job <sup style='color:red;'>{{ count($postedJob) }}</sup></a>
@@ -337,7 +353,7 @@
 					<a class="nav-link" href="{{url('/submission-pending')}}"><i class="fa fa-clock-o"></i>Applicants Submission <sup style='color:red;'>{{ count($submissionpending) }}</sup></a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="{{url('/job-complete')}}"><i class="fa fa-file-text" aria-hidden="true"></i> Your Job's Completed List <sup style='color:red;'>{{ count($completedJob) }}</sup></a>
+					<a class="nav-link" href="{{url('/job-complete')}}"><i class="fa fa-file-text" aria-hidden="true"></i> Approved Records <sup style='color:red;'>{{ count($completedJob) }}</sup></a>
 				</li>
 			@endif
 		</ul>
@@ -436,3 +452,273 @@
        </div>
     </div>
  </div>
+
+
+ {{-- Start --}}
+                                <!-- Modal -->
+                                <div class="modal fade" id="ChoosePayment" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title font-weight-bold" id="staticBackdropLabel">Choose Your Payment Method </h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true" style="font-weight: 300;">&times;</span>
+                                        </button>
+                                        </div>
+                                        <div class="modal-body">
+                                        <div class="paymentWay row">
+
+                                            <div class="col-sm-4 text-center">
+                                                <button class="usdt_pay paymentBtn"><img class="img-fluid" src="{{ asset('/images/wallets/usdt.png') }}" alt="USDT"> </button>
+                                            </div>
+                                            <div class="col-sm-4 text-center">
+                                                <button class="alipay_pay paymentBtn"><img class="img-fluid" src="{{ asset('/images/wallets/alipay.png') }}" alt="Alipay"></button>
+                                            </div>
+                                            <div class="col-sm-4 text-center">
+                                                <button class="airtm_pay paymentBtn"><img class="img-fluid" src="{{ asset('/images/wallets/airtm.png') }}" alt="Airtm"></button>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+
+                                <!-- USDT Modal -->
+                                <div class="modal fade" id="usdtQrModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title font-weight-bold" id="staticBackdropLabel">Deposit USDT (TRC-20) </h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true" style="font-weight: 300;">&times;</span>
+                                        </button>
+                                        </div>
+                                        <div class="modal-body">
+                                        <div class="qrcodeScanning">
+                                            <div class="visible-print text-center">
+                                                {!! QrCode::size(150)->generate('TEPR9JcPwy7ANmhKyhe8zwAyXSKS7vVp8i'); !!}
+                                                <br>
+                                                <p class="text-white">USDT wallet address.</p>
+
+                                                <p class="text-white" style="font-size: 14px">Wallet Address: <span style="color:rgb(10, 236, 78);">TEPR9JcPwy7ANmhKyhe8zwAyXSKS7vVp8i</span> &nbsp;&nbsp;
+                                                    <button type="button" class="btn  btn-sm btn-outline-primary text-white" id="btnUsdt_cop" onclick="copyUsdtAddress('#usdtAddress')"><i class="fa fa-copy"></i></button>
+                                                    <span id="usdtAddress" style="display: none">TEPR9JcPwy7ANmhKyhe8zwAyXSKS7vVp8i</span>
+                                                </p>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label for="name" class="col-sm-2 col-form-label text-white tx-12">TopUp Amount</label>
+                                                <div class="col-sm-10">
+                                                    <input class="form-control" type="number" min=10 step="any" name="usdtbalanceCopy" id="usdtbalanceCopy" placeholder="Minimum Topup amount 10 USD">
+                                                </div>
+                                            </div>
+                                            <p class="text-white" style="font-size: 13px;text-align:center">Screenshot and submit your transaction receipt</p>
+                                            <div class="imp text-white">
+                                                Important:
+                                                <ul>
+                                                    <li>Send only TRC20 USDT to this deposit address. Sending any other coin or token to this address may result in the lose of your deposit permanently</li>
+                                                    <li>Ensure the wallet address is correct before you do any transaction. Sending to the incorrect address may result in the lose of your deposit permanently.</li>
+                                                    <li>Depositing to the above address requires confirmations of the entire network. It will arrive after your network confirmation.</li>
+                                                </ul>
+                                            </div>
+
+                                            <div class="text-center"><button  class="btn btn-secondary btn-sm transactionIdSubmission" style="color: #000;"> <i class="fa fa-grav" aria-hidden="true"></i> Submit Proof</button></div>
+
+                                        </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                <!-- Alipay Modal -->
+                                <div class="modal fade" id="alipayQrModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title font-weight-bold text-center" style="font-size: 12px" id="staticBackdropLabel">Deposit By Alipay <br>Exchange rate: 6.8 CNY to 1 DG USD </h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true" style="font-weight: 300;">&times;</span>
+                                        </button>
+                                        </div>
+                                        <div class="modal-body">
+                                        <div class="qrcodeScanning">
+                                            <div class="visible-print text-center">
+                                                {!! QrCode::size(150)->generate('https://qr.alipay.com/tsx18266erap1rbtbzv4h0f'); !!}
+                                                <br>
+                                                <p class="text-white">Scan QR Code Above</p>
+                                                <p class="text-white" style="font-size: 13px">Screenshot and submit your transaction receipt</p>
+                                            </div>
+                                            <div class="imp text-white">
+                                                Important:
+                                                <ul>
+                                                    <li>Send only CNY to this deposit address. Sending any other coin or token to this address may result in the lose of your deposit permanently</li>
+                                                    <li>Ensure the wallet address is correct before you do any transaction. Sending to the incorrect address may result in the lose of your deposit permanently.</li>
+                                                    <li>Depositing to the above address requires confirmations of the payment gateway. Credits will be added after confirmation.</li>
+                                                </ul>
+                                            </div>
+                                            <div class="text-center"><button class="btn btn-secondary btn-sm alipaytransactionIdSubmission"> <i class="fa fa-grav" aria-hidden="true"></i> Click Here...</button></div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+
+                                <!-- USDT SUBMIT Modal -->
+                                <div class="modal fade" id="usdtAmountVerify" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title font-weight-bold" id="staticBackdropLabel">Transaction ID</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true" style="font-weight: 300;">&times;</span>
+                                        </button>
+                                        </div>
+                                        <div class="modal-body">
+                                        <div class="qrcodeScanning">
+                                            {!!Form::open(['class' => 'form-horizontal','id'=>'trxidWithBalance'])!!}
+                                            @csrf
+                                            <div class="form-group row">
+                                                <label for="name" class="col-sm-3 col-form-label text-white">TrxID</label>
+                                                <div class="col-sm-9">
+                                                    <input class="form-control" type="text" name="trxid" id="trxidvalue" placeholder="649EWFEXXXX...">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-9">
+                                                    <input class="form-control" type="hidden"  step="any" name="balance" id="balance" placeholder="The amount of $_balance you sent from app...">
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="payment_method" value="USDT(TRC-20)">
+                                            <div class="form-group row">
+                                                <label for="image" class="col-sm-3 col-form-label text-white">Screenshot:</label>
+                                                <div class="col-md-9">
+                                                    <input type="file" name="image" id="screenShotimage" data-max-file-size="1M" data-allowed-file-extensions="png jpg jpeg jfif"  class="dropify"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group m-b-0">
+                                                <div class="text-right">
+                                                    <button type="submit" class="btn btn-sm  btn-primary">
+                                                        <i class="fa fa-dollar"></i> Submit Transaction ID...
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            {!!Form::close()!!}
+                                        </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                <!-- Alipay SUBMIT Modal -->
+                                <div class="modal fade" id="alipayAmountVerify" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title font-weight-bold" id="staticBackdropLabel">Transaction Details</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true" style="font-weight: 300;">&times;</span>
+                                        </button>
+                                        </div>
+                                        <div class="modal-body">
+                                        <div class="qrcodeScanning">
+                                            {!!Form::open(['class' => 'form-horizontal','id'=>'trxidWithBalanceTwo'])!!}
+                                            @csrf
+                                            <div class="form-group row">
+                                                <label for="name" class="col-sm-3 col-form-label text-white">Alipay Account</label>
+                                                <div class="col-sm-9">
+                                                    <input class="form-control" type="text" name="trxid" id="trxid" placeholder="User ID">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="name" class="col-sm-3 col-form-label text-white">Amount</label>
+                                                <div class="col-sm-9">
+
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <input class="form-control" type="number" min="10" step="any" name="balance" id="balanceTop" placeholder="USD" onkeyup="cnyCalculator()" >
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <input class="form-control" readonly type="text"  id="cnyValue">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="payment_method" value="Alipay">
+                                            <div class="form-group row">
+                                                <label for="image" class="col-sm-3 col-form-label text-white">Screenshot:</label>
+                                                <div class="col-md-9">
+                                                    <input type="file" name="image" id="screenShotimage2" data-max-file-size="1M" data-allowed-file-extensions="png jpg jpeg jfif"  class="dropify"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group m-b-0">
+                                                <div class="text-right">
+                                                    <button type="submit" class="btn btn-sm  btn-primary">
+                                                        <i class="fa fa-dollar"></i> Submit Receipt
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            {!!Form::close()!!}
+                                        </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                <!-- Modal -->
+                                <div class="modal fade" id="airtmTopupSectionM" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabel">
+                                            <span class="font-weight-bold">Topup Through Airtm</span>
+                                        </h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true" style="font-weight: 300;">&times;</span>
+                                        </button>
+                                        </div>
+                                        {{-- <div class="modal-body">
+                                            {!!Form::open(['class' => 'form-horizontal','id'=>'topupMoney'])!!}
+                                            @csrf
+                                            <input class="form-control" type="number" min="1"  name="balance" placeholder="Balance Add..." required>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button  type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Topup</button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
+                                        {!!Form::close()!!} --}}
+                                        <div class="modal-body">
+                                            {{-- <select class="form-control topupBalance" style="width:80%;" id="select-id">
+                                                <option value="">Amount Select...</option>
+                                                <option value="https://secure.2checkout.com/checkout/buy?merchant=251369464878&dynamic=1&currency=USD&return-url=https%3A%2F%2Fwww.dgwarrior.com%2Fthank-you&return-type=redirect&tpl=default&prod=Topup&price=5&type=digital&qty=1&signature=8b4c894b157fb3170de13f43c406bfaa58fd5947a19152e115850036262c6343">$5</option>
+                                                <option value="https://secure.2checkout.com/checkout/buy?merchant=251369464878&dynamic=1&currency=USD&return-url=http%3A%2F%2Fdgwarrior.com%2Fthank-you&return-type=redirect&tpl=default&prod=Topup&price=10&type=digital&qty=1&signature=1570e7b18da7dd34e145898da448413e29b271cde74a254aab075ee76185097e&DOTEST=1">$10</option>
+                                                <option value="https://secure.2checkout.com/checkout/buy?merchant=251369464878&dynamic=1&currency=USD&return-url=https%3A%2F%2Fwww.dgwarrior.com%2Fthank-you&return-type=redirect&tpl=default&prod=Topup&price=15&type=digital&qty=1&signature=336985aa785b64691a1736ed7eaee042002fd91f5280f89158dfd589c71d2c4f">$15</option>
+                                                <option value="https://secure.2checkout.com/checkout/buy?merchant=251369464878&dynamic=1&currency=USD&return-url=https%3A%2F%2Fwww.dgwarrior.com%2Fthank-you&return-type=redirect&tpl=default&prod=Topup&price=25&type=digital&qty=1&signature=20fa97805b3e23da5f7a0ea63650acecaa7a3520d9230270cde9185e161958d6">$25</option>
+                                                <option value="https://secure.2checkout.com/checkout/buy?merchant=251369464878&dynamic=1&currency=USD&return-url=https%3A%2F%2Fwww.dgwarrior.com%2Fthank-you&return-type=redirect&tpl=default&prod=Topup&price=50&type=digital&qty=1&signature=561de637a1f7f734c9f517aa7b90d2a40b9083c3b3ca7842fe579e76b68e7baa">$50</option>
+                                                <option value="https://secure.2checkout.com/checkout/buy?merchant=251369464878&dynamic=1&currency=USD&return-url=https%3A%2F%2Fwww.dgwarrior.com%2Fthank-you&return-type=redirect&tpl=default&prod=Topup&price=75&type=digital&qty=1&signature=c08711c04780e3efce9d91e1d7d5e5ef2315a2e397fc7b9f174a604e244e4825">$75</option>
+                                                <option value="https://secure.2checkout.com/checkout/buy?merchant=251369464878&dynamic=1&currency=USD&return-url=https%3A%2F%2Fwww.dgwarrior.com%2Fthank-you&return-type=redirect&tpl=default&prod=Topup&price=100&type=digital&qty=1&signature=264b0e4bf2652b683cf62736b2d7eed930970e892e766dac3e449ae5a2cc3f31">$100</option>
+                                                <option value="https://secure.2checkout.com/checkout/buy?merchant=251369464878&dynamic=1&currency=USD&return-url=https%3A%2F%2Fwww.dgwarrior.com%2Fthank-you&return-type=redirect&tpl=default&prod=Topup&price=200&type=digital&qty=1&signature=23e65e6aa9d572a74dd522ef2e08eb8ed4091224819b0ef5390f0c85a441a2cd">$200</option>
+                                                <option value="https://secure.2checkout.com/checkout/buy?merchant=251369464878&dynamic=1&currency=USD&return-url=https%3A%2F%2Fwww.dgwarrior.com%2Fthank-you&return-type=redirect&tpl=default&prod=Topup&price=500&type=digital&qty=1&signature=6abeb3f90daba21d553154f728dbeeb038644113c9a4a78dad7d1ec27da76b5e">$500</option>
+                                            </select>
+                                            <button class="btn btn-sm btn-success" style="letter-spacing:2px;" onclick="siteRedirect()"> Next <i class="fas fa-arrow-right"></i></button>
+                                            --}}
+                                            <form action="{{route('airtm.req')}}" method="post" class="w-100">
+                                              @csrf
+                                              <div class="form-group payment_lay">
+                                                <select class="form-control topupBalance" name="amount" style="width:80%;" id="amount" required>
+                                                    <option value="">Amount Select...</option>
+                                                    <option value="10">$10</option>
+                                                    <option value="15">$15</option>
+                                                    <option value="25">$25</option>
+                                                    <option value="50">$50</option>
+                                                    <option value="75">$75</option>
+                                                    <option value="100">$100</option>
+                                                    <option value="200">$200</option>
+                                                    <option value="500">$500</option>
+                                                </select>
+                                                <button type="submit" class="btn btn-sm btn-success btn-flex">Next &nbsp; <i class="fa fa-arrow-right"></i></button>
+                                              </div>
+                                            </form>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                {{-- End --}}

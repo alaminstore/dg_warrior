@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
 		<meta name="author" content="DG WARRIOR">
-		<meta name="keywords" content="admin,dashboard,panel,bootstrap admin template,bootstrap dashboard,dashboard,themeforest admin dashboard,themeforest admin,themeforest dashboard,themeforest admin panel,themeforest admin template,themeforest admin dashboard,cool admin,it dashboard,admin design,dash templates,saas dashboard,dmin ui design">
+		<meta name="keywords" content="">
         <!-- Favicon -->
 		<link rel="icon" href="{{asset('logo.svg')}}" type="image/x-icon"/>
 		<!-- Title -->
@@ -72,15 +72,13 @@
 		<script src="{{asset('backend')}}/vendors/sweetalert/sweetalert.min.js"></script>
         <!-- Circle Progress js-->
 		<script src="{{ asset('backend/assets/js/circle-progress.min.js') }}"></script>
-		<script src="{{ asset('backend/assets/js/chart-circle.js') }}"></script>
-		<!-- Dashboard js-->
-		<script src="{{ asset('backend/assets/js/index.js') }}"></script>
 		<!-- Custom js-->
 		<script src="{{asset('backend/assets/js/custom.js')}}"></script>
 		<script src="{{asset('backend/assets/js/jquery-toast-plugin/jquery.toast.min.js')}}"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
 		<script>
-			//View================
+
+            //View================
             $(document).on('click', '.viewData', function () {
                 let id = $(this).attr('data-id');
                 console.log('id--', id);
@@ -99,12 +97,11 @@
                         $('#viewVisibility').html(jvisibility);
                         $('#viewWorkers').html(response.data.job_worker);
                         $('#viewDetails').html(response.data.job_description);
-                        if(response.data.job_price > 0.5){
+                        if(response.data.job_visibility != "4"){
                           $('#viewPrice').html('$'+ response.data.job_price);
                         }else{
-                            $('#viewPrice').html('Depend on the amount of the topup percentage...');
+                            $('#viewPrice').html('Top Up Percentage');
                         }
-
                         $('#jobpostId').val(response.data.id);
                         if(response.data.job_status == 1){
                             $('.jobPermit').addClass( "hide" );
@@ -147,6 +144,7 @@
 						$('#myModalSave').modal('hide');
 						toastr.success(response.message);
 						$("#BalanceRechange").load(location.href + " #BalanceRechange>*", "");
+						$(".bellReff").load(location.href + " .bellReff>*", "");
 
 					}
                 }
@@ -197,6 +195,214 @@
             @endforeach
         @endif
 
+        //Full view Screenshot
+        $(document).on('click', '.viewScreenshot', function () {
+            let id = $(this).attr('data-id');
+            // console.log('id:',id);
+            $.ajax({
+                url: "{{url('pscreen')}}/" + id + '/edit',
+                method: "get",
+                data: {},
+                dataType: 'json',
+                success: function (response) {
+                    let url = window.location.origin;
+                    // console.log('data', response);
+                    $('#screenShotImage').html('');
+                    var img_url = '{!!URL::to('/')!!}' + "/" + response.data.image;
+                    $('#screenShotImage').html('<img src=" ' + img_url + '">')
+                },
+                error: function (error) {
+                    if (error.status == 404) {
+                        toastr.error('Not found!');
+                    }
+                }
+            });
+        });
+        $(document).on('click', '.usdt_pay', function (e) {
+            $("#ChoosePayment").modal('hide');
+            setTimeout(function(){
+                $('#usdtQrModal').modal('show');
+            }, 1000);
+        });
+        $(document).on('click', '.alipay_pay', function (e) {
+            $("#ChoosePayment").modal('hide');
+            setTimeout(function(){
+                $('#alipayQrModal').modal('show');
+            }, 1000);
+        });
+        $(document).on('click', '.airtm_pay', function (e) {
+            $("#ChoosePayment").modal('hide');
+            setTimeout(function(){
+                $('#airtmTopupSectionM').modal('show');
+            }, 1000);
+        });
+        $("#UsdtModelBalances").validate({
+            rules: {
+                usdtbalanceCopy: {
+                    required:true,
+                },
+            }
+        });
+        $(document).on('click', '.transactionIdSubmission', function (e) {
+             let dat = $('#usdtbalanceCopy').val();
+             if (dat == "") {
+                alert("Top Up Amount must be filled out");
+                return false;
+            }else{
+                $("#usdtQrModal").modal('hide');
+                setTimeout(function(){
+                    $('#usdtAmountVerify').modal('show');
+                    $('#balance').val(dat);
+                }, 1000);
+            }
+        });
+        $(document).on('click', '.alipaytransactionIdSubmission', function (e) {
+            $("#alipayQrModal").modal('hide');
+            setTimeout(function(){
+                $('#alipayAmountVerify').modal('show');
+            }, 1000);
+        });
+
+
+
+        $("#trxidWithBalance").validate({
+            rules: {
+                trxid: {
+                    required:true,
+                },
+                image: {
+                    required:true,
+                }
+            }
+        });
+        $("#trxidWithBalanceTwo").validate({
+            rules: {
+                trxid: {
+                    required:true,
+                },
+                balance: {
+                    required:true,
+                },
+                image: {
+                    required:true,
+                }
+            }
+        });
+
+        // TrxID justify
+        $('#trxidWithBalance').on('submit', function (e) {
+            e.preventDefault();
+            var $form = $(this);
+            if(! $form.valid()) return false;
+            $.ajax({
+                url: "{{route('trxid.justify')}}",
+                method: "POST",
+                data: new FormData(this),
+                dataType: 'JSON',
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (data) {
+                    console.log('update', data);
+                    toastr.options = {
+                        "debug": false,
+                        "positionClass": "toast-bottom-right",
+                        "onclick": null,
+                        "fadeIn": 300,
+                        "fadeOut": 1000,
+                        "timeOut": 5000,
+                        "extendedTimeOut": 1000
+                    };
+
+                    if(data.status == 0){
+                        $.each(data.error,function(key,value){
+                            toastr.error(value);
+                        })
+                    }else{
+                        if(data.status == 2){
+                            toastr.warning(data.msg);
+                        }else{
+                            if(data.status == true){
+                                $('#trxidWithBalance').trigger('reset');
+                                $(".modal").modal('hide');
+                                // $('.modal').removeClass('show');
+                                setTimeout(function () {
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'success',
+                                        title: 'Please Wait for a while until our admin check and update the amount of Balance!',
+                                        showConfirmButton: true,
+                                        })
+                                }, 500);
+
+                            }
+                        }
+                    }
+                }
+            });
+        });
+        // Alipay Trxid justify
+        $('#trxidWithBalanceTwo').on('submit', function (e) {
+            e.preventDefault();
+            var $form = $(this);
+            if(! $form.valid()) return false;
+            $.ajax({
+                url: "{{route('trxid.justify')}}",
+                method: "POST",
+                data: new FormData(this),
+                dataType: 'JSON',
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function (data) {
+                    console.log('update', data);
+                    toastr.options = {
+                        "debug": false,
+                        "positionClass": "toast-bottom-right",
+                        "onclick": null,
+                        "fadeIn": 300,
+                        "fadeOut": 1000,
+                        "timeOut": 5000,
+                        "extendedTimeOut": 1000
+                    };
+
+                    if(data.status == 0){
+                        $.each(data.error,function(key,value){
+                            toastr.error(value);
+                        })
+                    }else{
+                        if(data.status == 2){
+                            toastr.warning(data.msg);
+                        }else{
+                            if(data.status == true){
+                                $('#trxidWithBalanceTwo').trigger('reset');
+                                $(".modal").modal('hide');
+                                // $('.modal').removeClass('show');
+                                setTimeout(function () {
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'success',
+                                        title: 'Please Wait for a while until our admin check and update the amount of Balance!',
+                                        showConfirmButton: true,
+                                        })
+                                }, 500);
+
+                            }
+                        }
+                    }
+                }
+            });
+        });
+        function cnyCalculator() {
+            let txtFirstNo = document.getElementById('balanceTop').value;
+            let txtSecondNo = 6.8;
+            let result = parseFloat(txtFirstNo) * parseFloat(txtSecondNo);
+            if (!isNaN(result)) {
+                document.getElementById('cnyValue').value = "CNY ¥"+result.toFixed(2);
+            }else{
+                document.getElementById('cnyValue').value = "";
+            }
+        }
 
         // document.onkeydown = function(e) {
         //     if(event.keyCode == 123) {
@@ -212,10 +418,10 @@
         //     return false;
         //     }
         // }
-
-
-
     </script>
 	@yield('js')
+    <script>
+        $('.topupBalance').select2();
+    </script>
 	</body>
 </html>

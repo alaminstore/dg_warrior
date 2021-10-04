@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css">
 @endsection
 @section('content')
-<style>#icon{cursor:pointer;display:none}button#icon{position:absolute;top:33%;left:87%}@media screen and (max-width:768px){button#icon{position:absolute;top:39%;left:64%}}.list-group-item{border-bottom:2px solid #f2e9e9}.dropify-wrapper{line-height:30px!important}.dropify-wrapper .dropify-message span.file-icon {font-size: 20px!important;color: #CCC;}.col-sm-3{display:flex;justify-content:flex-end;align-items:center}nav.nav.main-nav-line.p-3.tabs-menu.profile-nav-line.bg-gray-100{display:flex;flex-wrap:wrap!important;justify-content:space-between;align-items:baseline}h4.tx-15.mb-3 {display: flex;flex-wrap: wrap;justify-content: space-between;align-items: baseline;border: 2px solid #826a6a;border-radius: 27px;padding: 8px 7px;background: #826a6a;}</style>
+<style>#icon{cursor:pointer;display:none}button#icon{position:absolute;top:33%;left:87%}@media screen and (max-width:768px){button#icon{position:absolute;top:39%;left:64%}}.list-group-item{border-bottom:2px solid #f2e9e9}.dropify-wrapper{line-height:30px!important}.dropify-wrapper .dropify-message span.file-icon {font-size: 20px!important;color: #CCC;}.col-sm-3{display:flex;justify-content:flex-end;align-items:center}nav.nav.main-nav-line.p-3.tabs-menu.profile-nav-line.bg-gray-100{display:flex;flex-wrap:wrap!important;justify-content:space-between;align-items:baseline}h4.tx-15.mb-3 {display: flex;flex-wrap: wrap;justify-content: space-between;align-items: baseline;border: 2px solid #826a6a;border-radius: 5px;padding: 8px 7px;background: #826a6a;}.profile-cover__action {background-size: cover;background-position: center;width: 100%;height: auto;}</style>
 <div class="main-content pt-0">
     <div class="container">
        <!-- Page Header -->
@@ -37,7 +37,7 @@
                                     <div class="btn-profile">
                                         <button class="btn btn-rounded btn-danger" id="withdrawableamountUpdated">
                                             <i class="fa fa-dollar"></i>
-                                            <span>{{ Auth::user()->withdrawable == null ? "0" : Auth::user()->withdrawable}}</span>
+                                            <span>{{ Auth::user()->withdrawable == null ? "0" : number_format((float)Auth::user()->withdrawable, 2, '.', '')}}</span>
                                         </button>
                                         <button class="btn btn-rounded btn-success" data-toggle="modal" data-target="#widrawable">
                                             <span style='font-size:20px;'>&#9839;</span><span> Withdraw Request</span>
@@ -227,7 +227,8 @@
                 <label for="wallet_name" class="col-sm-3 col-form-label">Wallet</label>
                 <div class="col-sm-9">
                     <select name="wallet_name" id="" class="form-control">
-                        <option value="Airtm" selected>Airtm</option>
+                        <option value="USDT (TRC-20)" selected>USDT (TRC-20)</option>
+                        <option value="Airtm">Airtm</option>
                     </select>
                 </div>
             </div>

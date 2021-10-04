@@ -14,7 +14,7 @@ Route::get('/clear-cache', function() {
     return 'DONE'; //Return anything
 });
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/user-management', 'HomeController@userList')->middleware('admincheck');
@@ -25,7 +25,6 @@ Route::get('/posted-job','HomeController@postedJob')->name('posted.job');
 Route::group(['middleware'=>['usercheck']], function(){
 
     Route::get('available-job','HomeController@availableJob')->name('available.job');
-
     Route::get('/activity', 'SubcriptionColtroller@show')->name('activity');
 });
 Route::get('get-jobtype/{id}/{value}','HomeController@quickPass');
@@ -37,7 +36,8 @@ Route::post('job-submit/store', 'HomeController@submitTaskStore')->name('jobsubm
 Route::get('jobdetails/{id}', 'HomeController@viewJob')->name('jobdetails.view');
 Route::get('proofOfTask/{id}', 'HomeController@viewProofOfTask')->name('viewProofOfTask.view');
 Route::get('revisionSystem/{id}', 'HomeController@viewRevisionSystem')->name('revisionSystem.view');
-Route::get('waiting-job', 'HomeController@joblist')->name('joblist.show');
+Route::get('waiting-job', 'HomeController@joblist')->name('joblist.show')->middleware('admincheck');
+Route::get('all-jobs', 'HomeController@alljoblist')->name('alljoblist.show')->middleware('admincheck');
 Route::get('taskdelete','HomeController@destroy')->name('task.destroy');
 Route::get('userdelete','HomeController@userDestroy')->name('user.destroy');
 Route::post('rejecttaskdelete','HomeController@rejectSubmitTask')->name('rejecttask.destroy');
@@ -51,18 +51,24 @@ Route::get('/jobdelete-status','AdminRoleController@jobDeleteStatus')->name('job
 Route::get('/jobpower-status','AdminRoleController@jobPowerStatus')->name('jobpower.status');
 Route::get('/jobprice-status','AdminRoleController@jobPriceStatus')->name('jobprice.status');
 Route::get('admindetails/{id}/edit', 'AdminRoleController@edit');
+Route::get('withdrawaddressdetails/{id}/edit', 'AdminRoleController@WithdrawAddressEdit');
+Route::get('completedwithdrawaddressdetails/{id}/edit', 'AdminRoleController@CompletesWithdrawAddressEdit');
 Route::get('balancedetails/{id}/edit', 'AdminRoleController@balanceEdit');
 Route::get('userbalancedetails/{id}/edit', 'AdminRoleController@userBalanceEdit');
 Route::post('admindetails/updated', 'AdminRoleController@updated')->name('admin.updated');
 Route::post('balance/editing', 'AdminRoleController@balanceEditing')->name('balance.editing');
+Route::post('trxid/justify', 'AdminRoleController@trxidJustify')->name('trxid.justify');
 Route::post('profileInfo/updated', 'MyProfileController@updated')->name('profileInfo.updated');
 Route::post('balance/change', 'AdminRoleController@balanceChange')->name('balance.change');
 Route::get('portfolio-image/{id}/edit', 'MyProfileController@edit')->name('backend.portfolioimageEdit');
 Route::post('image-updated', 'MyProfileController@updatedImage')->name('backend.portfolioimage');
 Route::post('withdraw-request/save', 'MyProfileController@withdrawStatus')->name('withdraw.request');
 Route::get('withdrawable-req','MyProfileController@acceptWithdrawRequest')->name('withdrawable.req');
+Route::get('trxidAccept-req','MyProfileController@trxidAcceptRequest')->name('trxidAccept.req');
 Route::get('withdraw-request', 'MyProfileController@withdrawView')->name('withdrawview.request')->middleware('admincheck');
+Route::get('topup-request', 'MyProfileController@topupReq')->name('TopupRecharge.request')->middleware('admincheck');
 Route::get('withdraw-completed','MyProfileController@acceptWithdrawCompleted')->name('withdraw.complete')->middleware('admincheck');
+Route::get('topup-usdt-completed','MyProfileController@topupAccepted')->name('withdraw.complete')->middleware('admincheck');
 Route::post('revision-chance', 'HomeController@revisionSubmit')->name('revision.Submit');
 Route::get('task-revision', 'HomeController@revisionView')->name('revision.view');
 Route::get('view-instruction/{id}', 'HomeController@viewInstruction')->name('viewInstruction.show');
@@ -70,6 +76,7 @@ Route::post('job-resubmit/store', 'HomeController@reSubmitTaskStore')->name('job
 Route::get('/settings','MyProfileController@settings');
 Route::post('old-password', 'MyProfileController@oldPass')->name('reset.check');
 Route::post('change-password', 'MyProfileController@newPass')->name('newPass.change');
+Route::get('pscreen/{id}/edit', 'AdminRoleController@pScreen');
 
 // FrontEnd Controller
 Route::get('/', 'FrontEndController@index')->name('frontend');

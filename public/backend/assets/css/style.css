@@ -16170,7 +16170,7 @@ ul.inbox-pagination {
     -webkit-box-pack: end;
     justify-content: flex-end;
     overflow: hidden;
-    background: url(../img/media/bg-img.jpg) no-repeat;
+    background: url(../img/media/bg-img.png) no-repeat;
     background-size: cover;
 }
 
@@ -73148,9 +73148,8 @@ div#viewTextMessage {
       text-align: right;
     }
     button.btn.togglebtn {position: absolute;bottom: 0px;}
-}
-@media screen and (max-width: 480px) {
     .m_view {
-      display:none;
+        display:none;
     }
-  }
+}
+

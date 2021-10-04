@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\AdminDetail;
+use App\DgManagerDue;
 use App\SubmitTask;
+use App\TrxId;
 use App\User;
 use App\WithdrawStatus;
 use Illuminate\Http\Request;
@@ -22,7 +24,7 @@ class MyProfileController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','verified']);
     }
 
     /**
@@ -123,7 +125,7 @@ class MyProfileController extends Controller
                     return response()->json(['status'=> 2,'notification'=>'Sorry You have not enough withdrawable amount!']);
                 }
             }else{
-                return response()->json(['status'=> 3,'message'=>'Sorry! Minimum withdrawable amount is, $6']);
+                return response()->json(['status'=> 3,'message'=>'Sorry! Minimum withdrawable amount is, $15']);
             }
         }
     }
@@ -146,6 +148,22 @@ class MyProfileController extends Controller
         // return $withdrawableList;
         return view('backend.withdrawable.withdraw_req',compact('withdrawableList','jobPower'));
     }
+
+    public function topupReq(){
+        $jobPower = null;
+        if(Auth::user()->role_id != null){
+            if(Auth::user()->role_id == 2){
+                $token = AdminDetail::where('user_id','=',Auth::user()->id)->where('user_delete_power','=',1)->first();
+                if($token != null){
+                    $jobPower = true;
+                }else{
+                    $jobPower = false;
+                }
+            }
+            $topupReq = TrxId::with('getUser')->where('status',0)->orderBy('id', 'DESC')->get();
+            return view('backend.TopupUsd.topup_req',compact('topupReq','jobPower'));
+        }
+    }
     public function acceptWithdrawCompleted(){
         $withdrawableList = WithdrawStatus::with('getUser')->where('withdraw_status', 1)->paginate(10);
         // return $withdrawableList;
@@ -157,6 +175,37 @@ class MyProfileController extends Controller
         $acceptRequest->accept_time = Carbon::now();
         if($acceptRequest->save()){
             return response()->json(['status'=>true,'message' =>'You accept the withdrawable Request!']);
+        }
+    }
+    public function trxidAcceptRequest(Request $request){
+        $trxid = TrxId::find($request->id);
+        $theUser = User::find($trxid->user_id);
+        $theUser->balance+=$trxid->balance;
+        $theUser->recharge+=$trxid->balance;
+        $theUser->exp+=$trxid->balance;
+        $expLast = ($theUser->exp-50)/3;
+        $levelRecheck = pow($expLast, (1/3));
+        $theUser->level = (int) $levelRecheck;
+
+        $referrerUser = User::find($theUser->referrer_id);
+        if($referrerUser){
+            $referrerUser->manager_task_access = 1;
+            $referrerUser->sales_achieved+= $trxid->balance;
+            $DgManagerDue = new DgManagerDue();
+            $DgManagerDue->user_id = $referrerUser->id;
+            $DgManagerDue->manager_due_payment = (float) .08*$trxid->balance;
+            if($DgManagerDue->save()){
+                $referrerUser->save();
+            }
+        }
+        if($theUser->save()){
+            $trxid->status = 1;
+            $trxid->accept_time = Carbon::now();
+            $trxid->save();
+            return response()->json([
+                'status'=>true,
+                'notice'=>'Sucessfully approved the topup request!'
+            ]);
         }
     }
     public function settings(){
@@ -208,6 +257,10 @@ class MyProfileController extends Controller
             }
         }
 
+    }
+    public function topupAccepted(){
+        $trxid = TrxId::where('status',1)->orderBy('id', 'DESC')->get();
+        return view('backend.TopupUsd.topup_accepted',compact('trxid'));
     }
 
 }

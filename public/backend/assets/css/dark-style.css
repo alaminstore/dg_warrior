@@ -6549,3 +6549,9 @@ h6.bg {
 .table th, .table td {
     font-size: 14px;
 }
+@media only screen and (max-width: 991px) {
+    .dark-theme a {
+        color: #9b92ff;
+        display: inline-flex!important;
+    }
+}

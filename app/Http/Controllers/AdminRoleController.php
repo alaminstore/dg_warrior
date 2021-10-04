@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\AdminDetail;
 use App\JobPost;
+use App\TrxId;
 use App\User;
+use App\WithdrawStatus;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -63,9 +66,38 @@ class AdminRoleController extends Controller
             }
         }
     }
-    public function edit($id)
-    {
+    public function edit($id){
         $data  = User::find($id);
+        if($data){
+          return response()->json([
+              'success' => true,
+              'data' => $data
+            ]);
+        }
+        else{
+          return response()->json([
+              'success' => false,
+              'data' => 'No information found'
+            ]);
+        }
+    }
+    public function WithdrawAddressEdit($id){
+        $data  = WithdrawStatus::find($id);
+        if($data){
+          return response()->json([
+              'success' => true,
+              'data' => $data
+            ]);
+        }
+        else{
+          return response()->json([
+              'success' => false,
+              'data' => 'No information found'
+            ]);
+        }
+    }
+    public function CompletesWithdrawAddressEdit($id){
+        $data  = WithdrawStatus::find($id);
         if($data){
           return response()->json([
               'success' => true,
@@ -200,6 +232,60 @@ class AdminRoleController extends Controller
             if($balance->save()){
                 return response()->json(['status'=>true]);
             }
+        }
+    }
+
+    public function trxidJustify(Request $request){
+
+        $validator = Validator::make($request->all(),[
+            'trxid' => 'required',
+            'balance' => 'required',
+            'image' => 'required|max:1024'
+        ]);
+        if(!$validator->passes()){
+            return response()->json(['status'=> 0,'error'=>$validator->errors()->toArray()]);
+        }else{
+            $check = TrxId::where('trxid',$request->trxid)->first();
+            if($check){
+                return response()->json(['status'=>2,'msg'=>'This Transaction ID already used, Try with valid one']);
+            }else{
+                $trxInfo = new TrxId();
+                $trxInfo->trxid = $request->trxid;
+                $trxInfo->balance = $request->balance;
+                $trxInfo->user_id = Auth::user()->id;
+                $trxInfo->status = 0;
+                $trxInfo->payment_method = $request->payment_method;
+                if ($request->hasFile('image')) {
+                    $path = 'images/paymentScreenshot/';
+                    if (!is_dir($path)) {
+                        mkdir($path, 0755, true);
+                    }
+                    $image = $request->image;
+                    $imageName = rand(100, 1000) . $image->getClientOriginalName();
+                    $image->move($path, $imageName);
+                    $trxInfo->image = $path . $imageName;
+                }
+                if($trxInfo->save()){
+                    return response()->json(['status'=>true]);
+                }
+            }
+        }
+    }
+
+    public function pScreen($id)
+    {
+        $data  = TrxId::find($id);
+        if($data){
+          return response()->json([
+              'success' => true,
+              'data' => $data
+            ]);
+        }
+        else{
+          return response()->json([
+              'success' => false,
+              'data' => 'No information found'
+            ]);
         }
     }
 }
