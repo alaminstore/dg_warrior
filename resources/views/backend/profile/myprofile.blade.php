@@ -213,7 +213,7 @@
           {!!Form::open(['class' => 'form-horizontal','id'=>'withdrawRequest'])!!}
             @csrf
             <div id="withdrawableamountUpdatedModal">
-                <h6 class="text-center font-weight-bold">Your Current Widrable amount : <span class="bg">${{ Auth::user()->withdrawable == null ? "0" : Auth::user()->withdrawable}}</span></h6>
+                <h6 class="text-center font-weight-bold">Withdrawable Amount : <span>${{ Auth::user()->withdrawable == null ? "0" : Auth::user()->withdrawable}}</span></h6>
             </div><br>
 
              <div class="form-group row">

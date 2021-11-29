@@ -46,8 +46,7 @@
 
                             <div class="ms-panel">
                               <div class="ms-panel-body">
-                                <h6 class="text-center" style="opacity: 0.6;">For Changing your password, you must have to varify your current password.</h6><br>
-
+                                <h6 class="text-center" style="opacity: 0.6;">Security: Please verify your existing password.</h6><br>
                                 <div class="col-md-12">
                                 {!!Form::open(['class' => 'form-horizontal','id'=>'oldPassForm'])!!}
                                  @csrf

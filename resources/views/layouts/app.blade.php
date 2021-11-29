@@ -18,10 +18,23 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <style>
+        .goog-logo-link {display:none !important;}
+        .goog-te-gadget {color: transparent !important;padding: 0!important;margin:0!important;font-size: 0px!important;}
+        .goog-te-banner-frame.skiptranslate {display: none !important;}
+        #google_translate_element select{
+            background-color:#343A40;
+            color:#fff;
+            border: none;
+            border-radius:3px;
+            padding:0;
+            cursor: pointer;
+            }
+    </style>
 </head>
 <body class="bg-dark">
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm fixed-top">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     <img src="{{ asset('logo_white.svg') }}" class="img-fluid" width="70" height="auto" alt="logo">
@@ -37,6 +50,9 @@
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @guest
+                            <li class="nav-item">
+                                <a class="nav-link" id="google_translate_element"  data-toggle="tooltip" data-placement="bottom" title="Select Which language you want to convert"></a>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                             </li>
@@ -68,7 +84,16 @@
                 </div>
             </div>
         </nav>
+        <br>
+        <br>
+        <br>
 
+        <script>
+            function googleTranslateElementInit() {
+              new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+            }
+          </script>
+          <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
         <main class="py-4">
             @yield('content')
         </main>

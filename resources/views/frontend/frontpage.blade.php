@@ -2,11 +2,12 @@
 @section('title','DG Warrior | Home')
 @section('content')
 <style>.team_content {display: flex; width: 100%;flex-wrap: wrap;justify-content: center;align-items: center;}.error{color:#a84343;font-size:13px;}.gap_br {margin-top: -5px;}.gap_sp {margin-top: 10px;}</style>
-  <section id="hero" class="d-flex align-items-center">
+<section id="hero" class="d-flex align-items-center">
     <div class="container d-flex flex-column align-items-center justify-content-center" data-aos="fade-up">
       <h1>DG Warrior</h1>
       <h2>Community is our priority</h2>
       <a href="{{ url('/home') }}" class="btn-get-started scrollto">Get Started</a>
+      <a href="#" id="google_translate_elements"   data-toggle="tooltip" data-placement="bottom" title="Select Which language you want to convert"></a>
     </div>
   </section>
  <main id="main">

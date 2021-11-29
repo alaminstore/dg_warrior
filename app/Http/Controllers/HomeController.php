@@ -15,8 +15,10 @@ use App\SubmitTask;
 use App\AppliedJobStatus;
 use App\DgManagerDue;
 use App\RevisionTask;
+use App\SalesAchieved;
 use App\SubsNonSubsLimit;
 use App\TaskCheck;
+use App\TotalRevenue;
 use Illuminate\Support\Facades\Crypt;
 
 class HomeController extends Controller
@@ -39,22 +41,22 @@ class HomeController extends Controller
     // public $totalUser = [];
     public function index(){
         $check = ReferalTracking::with('getUserName')->where('refered_user',Auth::user()->id)
-                                        ->select('user')->get();
+            ->select('user')->get();
         // return $check;
         $data = [];
         $totalUser = [];
-                    $total2nd = 0;
-                    $range2 = 0;
-                    $data2nd = [];
-                            $total3rd = 0;
-                            $data3rd = [];
-                            $range3 = 0;
-                            $total4th = 0;
-                            $data4th = [];
-                            $range4= 0;
-                                    $total5th = 0;
-                                    $data5th = [];
-                                    $range5= 0;
+        $total2nd = 0;
+        $range2 = 0;
+        $data2nd = [];
+        $total3rd = 0;
+        $data3rd = [];
+        $range3 = 0;
+        $total4th = 0;
+        $data4th = [];
+        $range4= 0;
+        $total5th = 0;
+        $data5th = [];
+        $range5= 0;
         if($check != null){
             foreach($check as $val){
                 $data[]=$val->user;
@@ -64,68 +66,68 @@ class HomeController extends Controller
 
         // return $data;
 
- // Algo for finding 2nd-5th tier user list start
- //For 2nd tier list
- if($data != null){
+        // Algo for finding 2nd-5th tier user list start
+        //For 2nd tier list
+        if($data != null){
 
-     for($range2=0;$range2<count($data);$range2++){
-        $check2ndTier = ReferalTracking::where('refered_user',$data[$range2])
-        ->select('user')->get();
+            for($range2=0;$range2<count($data);$range2++){
+                $check2ndTier = ReferalTracking::where('refered_user',$data[$range2])
+                    ->select('user')->get();
 
-        foreach($check2ndTier as $val){
-            $data2nd[]=$val->user;
-            $totalUser[]=$val->user;
-        }
-        if ($check2ndTier != null) {
-            $total2nd+=count($check2ndTier);
-         }
-     }
- //for 3rd tier list
-     if($data2nd != null){
-
-        for($range3=0;$range3<count($data2nd);$range3++){
-            $check3rdTier = ReferalTracking::where('refered_user',$data2nd[$range3])
-            ->select('user')->get();
-
-            foreach($check3rdTier as $val){
-                $data3rd[]=$val->user;
-                $totalUser[]=$val->user;
-            }
-            if ($check3rdTier != null) {
-                $total3rd+=count($check3rdTier);
-             }
-         }
- //for 4th tier list
-        if($data3rd != null){
-            for($range4=0;$range4<count($data3rd);$range4++){
-                $check4thTier = ReferalTracking::where('refered_user',$data3rd[$range4])
-                ->select('user')->get();
-
-                foreach($check4thTier as $val){
-                    $data4th[]=$val->user;
+                foreach($check2ndTier as $val){
+                    $data2nd[]=$val->user;
                     $totalUser[]=$val->user;
                 }
-                if ($check4thTier != null) {
-                    $total4th+=count($check4thTier);
+                if ($check2ndTier != null) {
+                    $total2nd+=count($check2ndTier);
                 }
-             }
+            }
+            //for 3rd tier list
+            if($data2nd != null){
+
+                for($range3=0;$range3<count($data2nd);$range3++){
+                    $check3rdTier = ReferalTracking::where('refered_user',$data2nd[$range3])
+                        ->select('user')->get();
+
+                    foreach($check3rdTier as $val){
+                        $data3rd[]=$val->user;
+                        $totalUser[]=$val->user;
+                    }
+                    if ($check3rdTier != null) {
+                        $total3rd+=count($check3rdTier);
+                    }
+                }
+                //for 4th tier list
+                if($data3rd != null){
+                    for($range4=0;$range4<count($data3rd);$range4++){
+                        $check4thTier = ReferalTracking::where('refered_user',$data3rd[$range4])
+                            ->select('user')->get();
+
+                        foreach($check4thTier as $val){
+                            $data4th[]=$val->user;
+                            $totalUser[]=$val->user;
+                        }
+                        if ($check4thTier != null) {
+                            $total4th+=count($check4thTier);
+                        }
+                    }
+                }
+            }
         }
-    }
- }
-    //  return $total2nd;
-    //  return $data2nd;
-    // return $data3rd;
-    // return $data4th;
-    // return $totalUser;
-    $countUser = count($totalUser);
-    session()->put('totalCountUser',$countUser);
+        //  return $total2nd;
+        //  return $data2nd;
+        // return $data3rd;
+        // return $data4th;
+        // return $totalUser;
+        $countUser = count($totalUser);
+        session()->put('totalCountUser',$countUser);
 
         $i=0;
         $total = 0;
         for($i=0;$i<count($data);$i++){
             $ref = ReferalTracking::where('refered_user', '=', $data[$i])->get();
             if ($ref != null) {
-               $total+=count($ref);
+                $total+=count($ref);
             }
         }
         // return $check;
@@ -133,10 +135,12 @@ class HomeController extends Controller
         // $filter = [0,3];
         $AllForSuperAdmin = User::where('role_id',null)->get();
         // $sidebarNormalTask = JobPost::where('job_type',2)->whereIn('job_issuer_rank',$filter)->orderBy('id', 'DESC')->get()->take(4);
-        $sidebarNormalTask = JobPost::where('job_type',2)->where('job_visibility',1)->where('job_worker','!=',0)->where('user_id','!=',Auth::user()->id)->orderBy('id', 'DESC')->get()->take(4);
+        $sidebarNormalTask = JobPost::where('job_type',2)->where('job_visibility',1)->where('job_worker','!=',0)->where('job_status',1)->where('user_id','!=',Auth::user()->id)->orderBy('id', 'DESC')->get()->take(4);
         $executiveTask = JobPost::where('job_type',2)->where('job_visibility',3)->where('user_id','!=',Auth::user()->id)->orderBy('id', 'DESC')->get()->take(4);
         $managerTask = JobPost::where('job_issuer_rank',10)->orderBy('id', 'DESC')->get()->take(4);
-        return view('backend.dashboard',compact('check','total','data','data2nd','data3rd','data4th','data5th','fiveTiersUsersInfo','sidebarNormalTask','executiveTask','managerTask','totalUser','AllForSuperAdmin'));
+        $totalRevenueInfo = TotalRevenue::where('user_id',Auth::user()->id)->orderBy('id', 'DESC')->get();
+        $salesAchievedInfo = SalesAchieved::with('getUser')->where('referrer_id',Auth::user()->id)->orderBy('id','DESC')->get();
+        return view('backend.dashboard',compact('check','total','data','data2nd','data3rd','data4th','data5th','fiveTiersUsersInfo','sidebarNormalTask','executiveTask','managerTask','totalUser','AllForSuperAdmin','totalRevenueInfo','salesAchievedInfo'));
     }
 
     public function userList(){
@@ -160,14 +164,14 @@ class HomeController extends Controller
     public function quickPass($id, $value)
     {
         if($id == 2){
-          if($value > session()->get('totalCountUser')){
-              return response()->json([
-                'status' => 0,
-                'userInTier' => session()->get('totalCountUser'),
-                'message' => "You have not enough referral user in your tier!"
-            ]);
-            Session::forget('totalCountUser');
-          }
+            if($value > session()->get('totalCountUser')){
+                return response()->json([
+                    'status' => 0,
+                    'userInTier' => session()->get('totalCountUser'),
+                    'message' => "You have not enough referral user in your tier!"
+                ]);
+                Session::forget('totalCountUser');
+            }
         }
     }
 
@@ -238,45 +242,45 @@ class HomeController extends Controller
     public function viewJob($id){
         $data=JobPost::find($id);
         if($data){
-          return response()->json([
-              'success' => true,
-              'data' => $data
+            return response()->json([
+                'success' => true,
+                'data' => $data
             ]);
         }
         else{
-          return response()->json([
-              'success' => false,
-              'data' => 'No information found'
+            return response()->json([
+                'success' => false,
+                'data' => 'No information found'
             ]);
         }
     }
     public function viewProofOfTask($id){
         $data=SubmitTask::find($id);
         if($data){
-          return response()->json([
-              'success' => true,
-              'data' => $data
+            return response()->json([
+                'success' => true,
+                'data' => $data
             ]);
         }
         else{
-          return response()->json([
-              'success' => false,
-              'data' => 'No information found'
+            return response()->json([
+                'success' => false,
+                'data' => 'No information found'
             ]);
         }
     }
     public function viewRevisionSystem($id){
         $data=SubmitTask::find($id);
         if($data){
-          return response()->json([
-              'success' => true,
-              'data' => $data
+            return response()->json([
+                'success' => true,
+                'data' => $data
             ]);
         }
         else{
-          return response()->json([
-              'success' => false,
-              'data' => 'No information found'
+            return response()->json([
+                'success' => false,
+                'data' => 'No information found'
             ]);
         }
     }
@@ -317,7 +321,7 @@ class HomeController extends Controller
     public function userDestroy(Request $request){
         $userDelete = User::find($request->id);
         $check = ReferalTracking::where('refered_user',$userDelete->id)
-                                        ->select('user')->get();
+            ->select('user')->get();
         if($check){
             foreach($check as $ck){
                 $refId = User::find($ck->user);
@@ -335,15 +339,15 @@ class HomeController extends Controller
                 }
             }
             if($anyoneSubmitOrNot){
-               foreach($anyoneSubmitOrNot as $pickUser){
-                $theUserInfo = User::where('id',$pickUser->user_id)->first();
-                $theUserInfo->balance+=$pickUser->job_price;
-                $theUserInfo->withdrawable+=$pickUser->job_price;
-                if($theUserInfo->save()){
-                    $pickUser->status =1;
-                    $pickUser->save();
+                foreach($anyoneSubmitOrNot as $pickUser){
+                    $theUserInfo = User::where('id',$pickUser->user_id)->first();
+                    $theUserInfo->balance+=$pickUser->job_price;
+                    $theUserInfo->withdrawable+=$pickUser->job_price;
+                    if($theUserInfo->save()){
+                        $pickUser->status =1;
+                        $pickUser->save();
+                    }
                 }
-               }
             }
         }
         $availableInReferridIdOrNot = User::where('referrer_id','=',$request->id)->first();
@@ -366,129 +370,137 @@ class HomeController extends Controller
     }
 
     public function availableJob(){
-        $currentUser = User::where('id',Auth::user()->id)->first();
-        $thereferrel_id = $currentUser->referrer_id == null ? null : $currentUser->referrer_id;
-        // ================================================================================================
-        // Start
-        $check = null;
-        if($thereferrel_id){
-            $check = ReferalTracking::with('getUserName')->where('refered_user',$thereferrel_id)
-                                        ->select('user')->get();
-        }
-        // return $check;
-        $data = [];
-        $totalUsr = [];
-                    $total2nd = 0;
-                    $range2 = 0;
-                    $data2nd = [];
-                            $total3rd = 0;
-                            $data3rd = [];
-                            $range3 = 0;
-                            $total4th = 0;
-                            $data4th = [];
-                            $range4= 0;
-                                    $total5th = 0;
-                                    $data5th = [];
-                                    $range5= 0;
-        if($check != null){
-            foreach($check as $val){
-                $data[]=$val->user;
-                $totalUsr[]=$val->user;
-            }
-        }
-
-        // return $data;
- // Algo for finding 2nd-5th tier user list start
- //For 2nd tier list
- if($data != null){
-
-     for($range2=0;$range2<count($data);$range2++){
-        $check2ndTier = ReferalTracking::where('refered_user',$data[$range2])
-        ->select('user')->get();
-
-        foreach($check2ndTier as $val){
-            $data2nd[]=$val->user;
-            $totalUsr[]=$val->user;
-        }
-        if ($check2ndTier != null) {
-            $total2nd+=count($check2ndTier);
-         }
-     }
-    //  return $data2nd;
- //for 3rd tier list
-     if($data2nd != null){
-
-        for($range3=0;$range3<count($data2nd);$range3++){
-            $check3rdTier = ReferalTracking::where('refered_user',$data2nd[$range3])
-            ->select('user')->get();
-
-            foreach($check3rdTier as $val){
-                $data3rd[]=$val->user;
-                $totalUsr[]=$val->user;
-            }
-            if ($check3rdTier != null) {
-                $total3rd+=count($check3rdTier);
-             }
-         }
- //for 4th tier list
-        if($data3rd != null){
-            for($range4=0;$range4<count($data3rd);$range4++){
-                $check4thTier = ReferalTracking::where('refered_user',$data3rd[$range4])
+        try {
+            $currentUser = User::where('id',Auth::user()->id)->first();
+            $thereferrel_id = $currentUser->referrer_id == null ? null : $currentUser->referrer_id;
+            // ================================================================================================
+            // Start
+            $check = null;
+            // if($thereferrel_id){
+            $check = ReferalTracking::with('getUserName')->where('refered_user',Auth::user()->id)
                 ->select('user')->get();
-
-                foreach($check4thTier as $val){
-                    $data4th[]=$val->user;
+            // }
+            // return $check;
+            $data = [];
+            $totalUsr = [];
+            $total2nd = 0;
+            $range2 = 0;
+            $data2nd = [];
+            $total3rd = 0;
+            $data3rd = [];
+            $range3 = 0;
+            $total4th = 0;
+            $data4th = [];
+            $range4= 0;
+            $total5th = 0;
+            $data5th = [];
+            $range5= 0;
+            if($check != null){
+                foreach($check as $val){
+                    $data[]=$val->user;
                     $totalUsr[]=$val->user;
                 }
-                if ($check4thTier != null) {
-                    $total4th+=count($check4thTier);
-                 }
-             }
-        }
-    }
- }
+            }
 
-        $secondCount = count($data);
-        $thirdCount = count($data2nd);
-        if($secondCount>=5){
-            if($thirdCount>=2){
-                $thirdRemainder = $thirdCount % 2;
-                if($thirdRemainder == 0){
-                    $secondTierShould = ($thirdCount * 5)/2;
-                    if($secondCount>=$secondTierShould){
-                        $viewJob=0;
-                        $viewJob = $thirdCount / 2;
-                    }else{
-                        $secondRemainder = $secondCount % 5;
-                        $eligibleSecondTier = $secondCount - $secondRemainder; //5
-                        $viewJob = 0;
-                        $doubleJob = (2 * $eligibleSecondTier) / 5;
-                        $viewJob = $doubleJob / 2;
-                    }
-                }else{
-                    $eligibleThirdTier = $thirdCount - 1;
-                    $secondTierShould2 = ($eligibleThirdTier * 5)/2;
-                    if($secondCount>=$secondTierShould2){
-                        $viewJob = 0;
-                        $viewJob = $thirdCount/2;
-                    }else{
-                        $secondRemainder2 = $secondCount % 5;
-                        $eligibleSecondTier2 = $secondCount - $secondRemainder2;
-                        $viewJob = 0;
-                        $doubleJob = (2 * $eligibleSecondTier2) / 5;
-                        $viewJob = $doubleJob / 2;
-                    }
+            // return $data;
+            // Algo for finding 2nd-5th tier user list start
+            //For 2nd tier list
+            if($data != null){
 
+                for($range2=0;$range2<count($data);$range2++){
+                    $check2ndTier = ReferalTracking::where('refered_user',$data[$range2])
+                        ->select('user')->get();
+
+                    foreach($check2ndTier as $val){
+                        $data2nd[]=$val->user;
+                        $totalUsr[]=$val->user;
+                    }
+                    if ($check2ndTier != null) {
+                        $total2nd+=count($check2ndTier);
+                    }
+                }
+                //  return $data2nd;
+                //for 3rd tier list
+                if($data2nd != null){
+
+                    for($range3=0;$range3<count($data2nd);$range3++){
+                        $check3rdTier = ReferalTracking::where('refered_user',$data2nd[$range3])
+                            ->select('user')->get();
+
+                        foreach($check3rdTier as $val){
+                            $data3rd[]=$val->user;
+                            $totalUsr[]=$val->user;
+                        }
+                        if ($check3rdTier != null) {
+                            $total3rd+=count($check3rdTier);
+                        }
+                    }
+                    //for 4th tier list
+                    if($data3rd != null){
+                        for($range4=0;$range4<count($data3rd);$range4++){
+                            $check4thTier = ReferalTracking::where('refered_user',$data3rd[$range4])
+                                ->select('user')->get();
+
+                            foreach($check4thTier as $val){
+                                $data4th[]=$val->user;
+                                $totalUsr[]=$val->user;
+                            }
+                            if ($check4thTier != null) {
+                                $total4th+=count($check4thTier);
+                            }
+                        }
+                    }
                 }
             }
-        }else{
-            $viewJob = 0;
+
+            $secondCount = count($data);
+            $thirdCount = count($data2nd);
+            $viewJob=0;
+            if($secondCount>=5){
+                if($thirdCount>=2){
+                    $thirdRemainder = $thirdCount % 2;
+                    if($thirdRemainder == 0){
+                        $secondTierShould = ($thirdCount * 5)/2;
+                        if($secondCount>=$secondTierShould){
+                            $viewJob=0;
+                            $viewJob = $thirdCount / 2;
+                        }else{
+                            $secondRemainder = $secondCount % 5;
+                            $eligibleSecondTier = $secondCount - $secondRemainder; //5
+                            $viewJob = 0;
+                            $doubleJob = (2 * $eligibleSecondTier) / 5;
+                            $viewJob = $doubleJob / 2;
+                        }
+                    }else{
+                        $eligibleThirdTier = $thirdCount - 1;
+                        $secondTierShould2 = ($eligibleThirdTier * 5)/2;
+                        if($secondCount>=$secondTierShould2){
+                            $viewJob = 0;
+                            $viewJob = $thirdCount/2;
+                        }else{
+                            $secondRemainder2 = $secondCount % 5;
+                            $eligibleSecondTier2 = $secondCount - $secondRemainder2;
+                            $viewJob = 0;
+                            $doubleJob = (2 * $eligibleSecondTier2) / 5;
+                            $viewJob = $doubleJob / 2;
+                        }
+
+                    }
+                }
+            }else{
+                $viewJob = 0;
+            }
+            // return count($totalUsr);
+
+
+            $availableJob = JobPost::where('job_status',1)->where('job_type',1)->where('job_worker','!=',0)->where('user_id','!=',Auth::user()->id)->get()->take($viewJob);
+            $normalJob = JobPost::where('job_status',1)->where('job_worker','!=',0)->where('user_id','!=', Auth::user()->id)->where('job_type', 2)->orderBy('id', 'DESC')->paginate(5);
+            $appliedjobStatus = new AppliedJobStatus();
+            return view('backend.availablejob',compact('availableJob','appliedjobStatus','totalUsr','normalJob','thereferrel_id'));
+        } catch(\Exception $e) {
+
+            return "Something wrong, Please wait for a while";
         }
-        // return count($totalUsr);
-        $availableJob = JobPost::where('job_status',1)->where('job_type',1)->where('job_worker','!=',0)->where('user_id','!=',Auth::user()->id)->get()->take($viewJob);
-        $normalJob = JobPost::where('job_status',1)->where('job_worker','!=',0)->where('user_id','!=', Auth::user()->id)->where('job_type', 2)->orderBy('id', 'DESC')->paginate(5);
-        $appliedjobStatus = new AppliedJobStatus();
-        return view('backend.availablejob',compact('availableJob','appliedjobStatus','totalUsr','normalJob','thereferrel_id'));
     }
     public function AvailableJobById($id){
         $availableJobId = JobPost::find(Crypt::decrypt($id));
@@ -542,20 +554,20 @@ class HomeController extends Controller
                         $limitTask = SubsNonSubsLimit::where('user_id',Auth::user()->id)->first();
                         if($limitTask){
                             if(Auth::user()->subscription == 1){
-                               if($limitTask->limit >= 12){
-                                $notification = array('message' => 'Sorry Your today\'s job applied limit is over.', 'alert-type'=> 'warning');
-                                return redirect()->back()->with($notification);
-                               }else{
-                                $limitTask->limit += 1;
-                                $limitTask->save();
-                               }
+                                if($limitTask->limit >= 12){
+                                    $notification = array('message' => 'Sorry Your today\'s job applied limit is over.', 'alert-type'=> 'warning');
+                                    return redirect()->back()->with($notification);
+                                }else{
+                                    $limitTask->limit += 1;
+                                    $limitTask->save();
+                                }
                             }else{
                                 if($limitTask->limit >= 6){
-                                 $notification = array('message' => 'Sorry Your today\'s job applied limit is over.Subscribe to increase the limit', 'alert-type'=> 'warning');
-                                 return redirect()->back()->with($notification);
+                                    $notification = array('message' => 'Sorry Your today\'s job applied limit is over.Subscribe to increase the limit', 'alert-type'=> 'warning');
+                                    return redirect()->back()->with($notification);
                                 }else{
-                                 $limitTask->limit += 1;
-                                 $limitTask->save();
+                                    $limitTask->limit += 1;
+                                    $limitTask->save();
                                 }
                             }
                         }else{
@@ -606,18 +618,18 @@ class HomeController extends Controller
         $jobPower = null;
         if(Auth::user()->role_id != null){
             $submissionpending = SubmitTask::with("getUserName")->where('revision',null)->where('status',null)->paginate(15);
-        if(Auth::user()->role_id == 2){
-            $token = AdminDetail::where('user_id','=',Auth::user()->id)->where('job_power','=',1)->first();
-            if($token != null){
-                $jobPower = true;
-            }else{
-                $jobPower = false;
+            if(Auth::user()->role_id == 2){
+                $token = AdminDetail::where('user_id','=',Auth::user()->id)->where('job_power','=',1)->first();
+                if($token != null){
+                    $jobPower = true;
+                }else{
+                    $jobPower = false;
+                }
             }
-        }
         }else{
-           $submissionpending = SubmitTask::with("getUserName")->where('client_id',Auth::user()->id)
-                                                                ->where('revision',null)
-                                                                ->where('status',null)->paginate(15);
+            $submissionpending = SubmitTask::with("getUserName")->where('client_id',Auth::user()->id)
+                ->where('revision',null)
+                ->where('status',null)->paginate(15);
         }
         // return $submissionpending;
         return view('backend.submissionpending',compact('submissionpending','jobPower'));
@@ -638,29 +650,43 @@ class HomeController extends Controller
                 $freeCuponSbmission = TaskCheck::where('user_id',$request->hiddenUserId)->where('condition','=',1)->first();
                 $fromSecondSubmissionDaily = TaskCheck::where('user_id',$request->hiddenUserId)->where('condition','=',2)->first();
                 if($freeCuponSbmission && $fromSecondSubmissionDaily === null){
-                   //   user get full payment(1st unlocked hR free in a day)
+                    //   user get full payment(1st unlocked hR free in a day)
 
-                  $candidateUser->exp += $statusCondition->job_price;
-                  $expLastAmount = ($candidateUser->exp-50)/3;
-                  $levelRecheckAfterTaskApprove = pow($expLastAmount, (1/3));
-                  $candidateUser->level = (int) $levelRecheckAfterTaskApprove;
+                    $candidateUser->exp += $statusCondition->job_price;
+                    $expLastAmount = ($candidateUser->exp-50)/3;
+                    $levelRecheckAfterTaskApprove = pow($expLastAmount, (1/3));
+                    $candidateUser->level = (int) $levelRecheckAfterTaskApprove;
 
-                  $candidateUser->balance =$candidateUser->balance + $statusCondition->job_price + ($candidateUser->level * .01);
-                  $candidateUser->completed_job+=1;
-                  $candidateUser->withdrawable+=$statusCondition->job_price + ($candidateUser->level * .01);
-                  $candidateUser->save();
+                    $candidateUser->balance =$candidateUser->balance + $statusCondition->job_price + ($candidateUser->level * .01);
+                    $candidateUser->completed_job+=1;
+                    $candidateUser->withdrawable+=$statusCondition->job_price + ($candidateUser->level * .01);
+
+                    $total_Rev = new TotalRevenue();
+                    $total_Rev->user_id = $candidateUser->id;
+                    $total_Rev->withdrawable_added = $statusCondition->job_price + ($candidateUser->level * .01);
+                    $total_Rev->job_issuer = $jobPostId->user_id;
+                    $total_Rev->save();
+
+                    $candidateUser->save();
                 }
                 if($fromSecondSubmissionDaily){
-                //  Deduct 1$
-                  $candidateUser->exp += $statusCondition->job_price-1;
-                  $expLastAmount = ($candidateUser->exp-50)/3;
-                  $levelRecheckAfterTaskApprove = pow($expLastAmount, (1/3));
-                  $candidateUser->level = (int) $levelRecheckAfterTaskApprove;
+                    //  Deduct 1$
+                    $candidateUser->exp += $statusCondition->job_price-1;
+                    $expLastAmount = ($candidateUser->exp-50)/3;
+                    $levelRecheckAfterTaskApprove = pow($expLastAmount, (1/3));
+                    $candidateUser->level = (int) $levelRecheckAfterTaskApprove;
 
-                  $candidateUser->balance =$candidateUser->balance + $statusCondition->job_price-1 + ($candidateUser->level * .01);
-                  $candidateUser->completed_job+=1;
-                  $candidateUser->withdrawable+=$statusCondition->job_price-1 + ($candidateUser->level * .01);
-                  $candidateUser->save();
+                    $candidateUser->balance =$candidateUser->balance + $statusCondition->job_price-1 + ($candidateUser->level * .01);
+                    $candidateUser->completed_job+=1;
+                    $candidateUser->withdrawable+=$statusCondition->job_price-1 + ($candidateUser->level * .01);
+
+                    $total_Rev = new TotalRevenue();
+                    $total_Rev->user_id = $candidateUser->id;
+                    $total_Rev->withdrawable_added = $statusCondition->job_price-1 + ($candidateUser->level * .01);
+                    $total_Rev->job_issuer = $jobPostId->user_id;
+                    $total_Rev->save();
+
+                    $candidateUser->save();
                 }
             }else{
 
@@ -670,6 +696,13 @@ class HomeController extends Controller
                         $candidateUser->balance += $dgTableOrNot->manager_due_payment;
                         $candidateUser->completed_job+=1;
                         $candidateUser->withdrawable+=$dgTableOrNot->manager_due_payment;
+
+                        $total_Rev = new TotalRevenue();
+                        $total_Rev->user_id = $candidateUser->id;
+                        $total_Rev->withdrawable_added = $dgTableOrNot->manager_due_payment;
+                        $total_Rev->job_issuer = $jobPostId->user_id;
+                        $total_Rev->save();
+
                         if($candidateUser->save()){
                             $dgTableOrNot->delete();
                         }
@@ -679,6 +712,13 @@ class HomeController extends Controller
                     $candidateUser->balance += $statusCondition->job_price;
                     $candidateUser->completed_job+=1;
                     $candidateUser->withdrawable+=$statusCondition->job_price;
+
+                    $total_Rev = new TotalRevenue();
+                    $total_Rev->user_id = $candidateUser->id;
+                    $total_Rev->withdrawable_added = $statusCondition->job_price;
+                    $total_Rev->job_issuer = $jobPostId->user_id;
+                    $total_Rev->save();
+
                     $candidateUser->save();
                 }
             }
@@ -704,7 +744,7 @@ class HomeController extends Controller
 
     public function completedJob(){
         $completedJob = SubmitTask::with("getUserName","getJob")->where('client_id',Auth::user()->id)
-                                                       ->where('status',1)->get();
+            ->where('status',1)->get();
         // return $completedJob;
         return view('backend.completedtask',compact('completedJob'));
     }
@@ -762,15 +802,15 @@ class HomeController extends Controller
     public function viewInstruction($id){
         $data=RevisionTask::find($id);
         if($data){
-          return response()->json([
-              'success' => true,
-              'data' => $data
+            return response()->json([
+                'success' => true,
+                'data' => $data
             ]);
         }
         else{
-          return response()->json([
-              'success' => false,
-              'data' => 'No information found'
+            return response()->json([
+                'success' => false,
+                'data' => 'No information found'
             ]);
         }
     }

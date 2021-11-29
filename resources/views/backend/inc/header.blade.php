@@ -1,5 +1,19 @@
 <!-- Main Header-->
 <style>.paymentBtn {border: 1px solid #fff;border-radius: 5px;box-shadow: 0px 0px 3px 3px #3e612d;}input#cnyValue {background: #b2c6eb;color: #000;border-radius: 1px;}.form-group.payment_lay{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center}.tooltip{z-index:100000000}</style>
+<style>
+    .goog-logo-link {display:none !important;}
+    a.goog-logo-link {display: none!important;}
+    .goog-te-gadget {color: transparent !important;padding: 0!important;margin:0!important;font-size: 0px!important;}
+    .goog-te-banner-frame.skiptranslate {display: none !important;ss}
+    #google_translate_element select{
+     background-color:#000;
+     color:rgb(255, 255, 254);
+     border: none;
+     border-radius:3px;
+     padding:5px 10px;
+     cursor: pointer;
+     }
+</style>
 <div class="main-header side-header">
 	<div class="container">
 		<div class="main-header-left">
@@ -45,6 +59,7 @@
 					</div>
 				</div>
 			</div>
+
             @if (count($revisionList) > 0)
             <div class="main-header-notification">
 				<a class="nav-link icon" href="{{ url('/task-revision') }}">
@@ -74,17 +89,17 @@
 					<a class="dropdown-item" href="{{ url('/user-management') }}">
 						<i class="fa fa-users"></i> User Management
 					</a>
-					<a class="dropdown-item" href="{{ url('/topup-request') }}">
-						<i class="fa fa-usd" aria-hidden="true"></i> Top Up Request
-					</a>
-                    <a class="dropdown-item" href="{{ url('/topup-usdt-completed') }}">
-                        <i class="fa fa-usd" aria-hidden="true"></i> Accepted Top Up
-                    </a>
 					<a class="dropdown-item" href="{{ url('/submission-pending') }}">
 						<i class="fa fa-paperclip"></i> Pending Submission
 					</a>
 					@endif
                     @if(Auth::user()->role_id == 1)
+                    <a class="dropdown-item" href="{{ url('/topup-request') }}">
+						<i class="fa fa-usd" aria-hidden="true"></i> Top Up Request
+					</a>
+                    <a class="dropdown-item" href="{{ url('/topup-usdt-completed') }}">
+                        <i class="fa fa-usd" aria-hidden="true"></i> Accepted Top Up
+                    </a>
                     <a class="dropdown-item" href="{{ url('/all-jobs') }}">
 						<i class="fa fa-briefcase"></i>All Jobs
 					</a>
@@ -236,6 +251,7 @@
                                 </div>
                             </div>
                         </div>
+
                         @if (count($revisionList) > 0)
                         <div class="main-header-notification">
                             <a class="nav-link icon" href="{{ url('/task-revision') }}">
@@ -264,12 +280,6 @@
 									<a class="dropdown-item" href="{{ url('/user-management') }}">
 										<i class="fa fa-users"></i> User Management
 									</a>
-                                    <a class="dropdown-item" href="{{ url('/topup-request') }}">
-                                        <i class="fa fa-usd" aria-hidden="true"></i> Top Up Request
-                                    </a>
-                                    <a class="dropdown-item" href="{{ url('/topup-usdt-completed') }}">
-                                        <i class="fa fa-usd" aria-hidden="true"></i> Accepted Top Up
-                                    </a>
 									<a class="dropdown-item" href="{{ url('/submission-pending') }}">
 										<i class="fa fa-paperclip"></i> Pending Submission
 									</a>
@@ -279,6 +289,14 @@
 										<i class="fa fa-compass" aria-hidden="true"></i> Activity
 									</a>
 								@endif --}}
+								@if (Auth::user()->role_id == 1)
+                                    <a class="dropdown-item" href="{{ url('/topup-request') }}">
+                                        <i class="fa fa-usd" aria-hidden="true"></i> Top Up Request
+                                    </a>
+                                    <a class="dropdown-item" href="{{ url('/topup-usdt-completed') }}">
+                                        <i class="fa fa-usd" aria-hidden="true"></i> Accepted Top Up
+                                    </a>
+								@endif
                                 <a class="dropdown-item" href="{{ url('/settings') }}">
                                     <i class="fa fa-cogs" aria-hidden="true"></i> Settings
                                 </a>
@@ -317,6 +335,7 @@
 			<li class="nav-item">
 				<a class="nav-link" href="{{url('home')}}"><i class="fa fa-home"></i> Dashboard</a>
 			</li>
+
             @if (Auth::user()->role_id == null)
                 <li class="nav-item">
                     <a class="nav-link" href="{{url('/job-post')}}"><i class="fa fa-briefcase"></i> Post Job</a>
@@ -334,14 +353,15 @@
 				<li class="nav-item">
 					<a class="nav-link" href="{{url('/waiting-job')}}"><i class="fa fa-clock-o"></i> Waiting Job</a>
 				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{{url('/withdraw-request')}}"><span style="font-size:18px;">&#x1F4B0;</span>&nbsp; Withdraw Request <sup style='color:red;'>{{ count($withdrawableList) }}</sup></a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{{url('/withdraw-completed')}}"><span style="font-size:18px;">&#x1F4B0;</span>&nbsp; Withdraw Completed <sup style='color:red;'>{{ count($withdrawCompleted) }}</sup></a>
-				</li>
-
 			@endif
+            @if (Auth::user()->role_id == 1)
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url('/withdraw-request')}}"><span style="font-size:18px;">&#x1F4B0;</span>&nbsp; Withdraw Request <sup style='color:red;'>{{ count($withdrawableList) }}</sup></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url('/withdraw-completed')}}"><span style="font-size:18px;">&#x1F4B0;</span>&nbsp; Withdraw Completed <sup style='color:red;'>{{ count($withdrawCompleted) }}</sup></a>
+                </li>
+            @endif
 			@if (Auth::user()->role_id == null)
 				<li class="nav-item">
 					<a class="nav-link" href="{{url('/available-job')}}"><i class="fa fa-clock-o"></i>Available Job</a>
@@ -355,6 +375,65 @@
 				<li class="nav-item">
 					<a class="nav-link" href="{{url('/job-complete')}}"><i class="fa fa-file-text" aria-hidden="true"></i> Approved Records <sup style='color:red;'>{{ count($completedJob) }}</sup></a>
 				</li>
+                <li class="nav-item">
+                    <a class="nav-link" id="google_translate_element"  data-toggle="tooltip" data-placement="bottom" title="Select Which language you want to convert"><i class="fa fa-language" aria-hidden="true"></i></a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link with-sub" href=""><i class="fa fa-glide-g"></i> <span style="color: #fff;">GUIDE</span></a>
+                    <ul class="nav-sub">
+                        <li class="nav-sub-item">
+                            <a class="nav-sub-link" href="{{ asset('/backend/assets/img/images/1.jpeg') }}" data-lightbox="image-1" data-title="Change Password Guide"> Change Password Guide</a>
+                        </li>
+                        <li class="nav-sub-item">
+                            <a class="nav-sub-link" href="{{ asset('/backend/assets/img/images/2.jpeg') }}" data-lightbox="image-2" data-title="Registration Guide"> Registration Guide</a>
+                        </li>
+                        <li class="nav-sub-item">
+                            <a class="nav-sub-link" href="{{ asset('/backend/assets/img/images/3.jpeg') }}" data-lightbox="image-3" data-title="Login Guide"> Login Guide</a>
+                        </li>
+                        <li class="nav-sub-item">
+                            <a class="nav-sub-link" href="{{ asset('/backend/assets/img/images/4.jpeg') }}" data-lightbox="image-4" data-title="Referral Guide"> Referral Guide</a>
+                        </li>
+                        <li class="nav-sub-item">
+                            <a class="nav-sub-link" href="{{ asset('/backend/assets/img/images/5.jpeg') }}" data-lightbox="image-5" data-title="Post Job Guide"> Post Job Guide</a>
+                        </li>
+                        <li class="nav-sub-item">
+                            <a class="nav-sub-link" href="{{ asset('/backend/assets/img/images/6.jpeg') }}" data-lightbox="image-6" data-title="Issued Job History Guide"> Issued Job History Guide</a>
+                        </li>
+                        <li class="nav-sub-item">
+                            <a class="nav-sub-link" href="{{ asset('/backend/assets/img/images/7.jpeg') }}" data-lightbox="image-7" data-title="Applicants Submission Guide"> Applicants Submission Guide</a>
+                        </li>
+                        <li class="nav-sub-item">
+                            <a class="nav-sub-link" href="{{ asset('/backend/assets/img/images/8.jpeg') }}" data-lightbox="image-8" data-title="Approved Records Guide"> Approved Records Guide</a>
+                        </li>
+                        <li class="nav-sub-item">
+                            <a class="nav-sub-link" href="{{ asset('/backend/assets/img/images/9.jpeg') }}" data-lightbox="image-9" data-title="Available Job Guide"> Available Job Guide</a>
+                        </li>
+                        <li class="nav-sub-item">
+                            <a class="nav-sub-link" href="{{ asset('/backend/assets/img/images/10.jpeg') }}" data-lightbox="image-10" data-title="Apply Job Guide"> Apply Job Guide</a>
+                        </li>
+                        <li class="nav-sub-item">
+                            <a class="nav-sub-link" href="{{ asset('/backend/assets/img/images/11.jpeg') }}" data-lightbox="image-11" data-title="Top Up Guide(1)"> Top Up Guide(1)</a>
+                        </li>
+                        <li class="nav-sub-item">
+                            <a class="nav-sub-link" href="{{ asset('/backend/assets/img/images/12.jpeg') }}" data-lightbox="image-12" data-title="Top Up Guide(2) USDT (TRC20)"> Top Up Guide(2) <br> USDT (TRC20)</a>
+                        </li>
+                        <li class="nav-sub-item deskk">
+                            <a class="nav-sub-link" href="{{ asset('/backend/assets/img/images/12.jpeg') }}" data-lightbox="image-12" data-title="Top Up Guide(2) USDT (TRC20)"></a>
+                        </li>
+                        <li class="nav-sub-item deskk">
+                            <a class="nav-sub-link" href="{{ asset('/backend/assets/img/images/12.jpeg') }}" data-lightbox="image-12" data-title="Top Up Guide(2) USDT (TRC20)"></a>
+                        </li>
+                        <li class="nav-sub-item deskk">
+                            <a class="nav-sub-link" href="{{ asset('/backend/assets/img/images/12.jpeg') }}" data-lightbox="image-12" data-title="Top Up Guide(2) USDT (TRC20)"></a>
+                        </li>
+                        <li class="nav-sub-item deskk">
+                            <a class="nav-sub-link" href="{{ asset('/backend/assets/img/images/12.jpeg') }}" data-lightbox="image-12" data-title="Top Up Guide(2) USDT (TRC20)"></a>
+                        </li>
+
+                    </ul>
+                </li>
+
 			@endif
 		</ul>
 	</div>
@@ -545,6 +624,19 @@
                                                 {!! QrCode::size(150)->generate('https://qr.alipay.com/tsx18266erap1rbtbzv4h0f'); !!}
                                                 <br>
                                                 <p class="text-white">Scan QR Code Above</p>
+                                                <div class="form-group row">
+                                                    <label for="name" class="col-sm-2 col-form-label text-white tx-12">Top Up Amount</label>
+                                                    <div class="col-sm-10">
+                                                        <div class="row">
+                                                            <div class="col-sm-7">
+                                                                <input class="form-control tx-12" type="number" step="any" name="alipaybalancecopy" id="alipaybalancecopy" placeholder="Minimum Topup 10 USD" onkeyup="cnyCalculator()" >
+                                                            </div>
+                                                            <div class="col-sm-5">
+                                                                <input class="form-control" readonly type="text"  id="cnyValue">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <p class="text-white" style="font-size: 13px">Screenshot and submit your transaction receipt</p>
                                             </div>
                                             <div class="imp text-white">
@@ -555,7 +647,7 @@
                                                     <li>Depositing to the above address requires confirmations of the payment gateway. Credits will be added after confirmation.</li>
                                                 </ul>
                                             </div>
-                                            <div class="text-center"><button class="btn btn-secondary btn-sm alipaytransactionIdSubmission"> <i class="fa fa-grav" aria-hidden="true"></i> Click Here...</button></div>
+                                            <div class="text-center"><button class="btn btn-secondary btn-sm alipaytransactionIdSubmission" style="color:#000;"> <i class="fa fa-grav" aria-hidden="true"></i> Submit Proof</button></div>
                                         </div>
                                         </div>
                                     </div>
@@ -628,20 +720,7 @@
                                                     <input class="form-control" type="text" name="trxid" id="trxid" placeholder="User ID">
                                                 </div>
                                             </div>
-                                            <div class="form-group row">
-                                                <label for="name" class="col-sm-3 col-form-label text-white">Amount</label>
-                                                <div class="col-sm-9">
-
-                                                    <div class="row">
-                                                        <div class="col-sm-6">
-                                                            <input class="form-control" type="number" min="10" step="any" name="balance" id="balanceTop" placeholder="USD" onkeyup="cnyCalculator()" >
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <input class="form-control" readonly type="text"  id="cnyValue">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <input class="form-control" type="hidden" name="balance" id="balanceTop">
                                             <input type="hidden" name="payment_method" value="Alipay">
                                             <div class="form-group row">
                                                 <label for="image" class="col-sm-3 col-form-label text-white">Screenshot:</label>
@@ -722,3 +801,4 @@
                                         </div>
                                     </div>
                                 {{-- End --}}
+

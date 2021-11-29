@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\AdminDetail;
 use App\DgManagerDue;
+use App\SalesAchieved;
 use App\SubmitTask;
 use App\TrxId;
 use App\User;
@@ -191,6 +192,11 @@ class MyProfileController extends Controller
         if($referrerUser){
             $referrerUser->manager_task_access = 1;
             $referrerUser->sales_achieved+= $trxid->balance;
+            $salesAchieved = new SalesAchieved();
+            $salesAchieved->user_id = $trxid->user_id;
+            $salesAchieved->topup_amount = $trxid->balance;
+            $salesAchieved->referrer_id = $theUser->referrer_id;
+            $salesAchieved->save();
             $DgManagerDue = new DgManagerDue();
             $DgManagerDue->user_id = $referrerUser->id;
             $DgManagerDue->manager_due_payment = (float) .08*$trxid->balance;

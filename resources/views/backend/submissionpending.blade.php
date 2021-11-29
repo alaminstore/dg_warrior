@@ -9,7 +9,7 @@
 <!-- Page Header -->
 <div class="page-header">
     <div>
-        <h2 class="main-content-title tx-24 mg-b-5">You can accept or reject</h2>
+        <h2 class="main-content-title tx-24 mg-b-5">Verify Applicant Submission</h2>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ url('/') }}">DG Warrior</a></li>
             <li class="breadcrumb-item active" aria-current="page">Pending Submission</li>

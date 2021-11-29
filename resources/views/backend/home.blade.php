@@ -28,11 +28,23 @@
 		<link rel="stylesheet" href="{{asset('backend/assets/js/jquery-toast-plugin/jquery.toast.min.css')}}">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="{{asset('backend/assets/plugins/lightbox/lightbox.min.css')}}">
 		@yield('style')
 	</head>
     <body class="horizontalmenu dark-theme">
         {{-- oncontextmenu="return false;"         use this in body tag --}}
-
+        <style>
+           .main-navbar{overflow-y:initial!important}.main-navbar .nav-link.with-sub::after{content:'▼'!important}.main-navbar .nav-sub-link:before{content:'›'!important;font-size:18px}
+           @media screen and (max-width:992px){
+               .main-navbar .nav-item.show>.nav-sub{padding:5px;z-index:auto;width:100%;overflow-y:scroll;max-height:400px}
+            }
+           @media screen and (min-width:992px){
+               .deskk{display: none!important;}
+            }
+            .skiptranslate {
+                margin-top: -40px!important;
+            }
+        </style>
 		@include('backend.inc.header')
 		@yield('content')
         <div class="gap"></div>
@@ -66,6 +78,7 @@
 		<script src="{{asset('backend/assets/plugins/sidebar/sidebar.js')}}"></script>
 		<!-- Perfect-scrollbar js-->
 		<script src="{{asset('backend/assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js')}}"></script>
+
 		<!-- Sticky js-->
 		<script src="{{asset('backend/assets/js/sticky.js')}}"></script>
 		{{-- sweetalert2 --}}
@@ -76,6 +89,7 @@
 		<script src="{{asset('backend/assets/js/custom.js')}}"></script>
 		<script src="{{asset('backend/assets/js/jquery-toast-plugin/jquery.toast.min.js')}}"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+        <script src="{{asset('backend/assets/plugins/lightbox/lightbox.min.js')}}"></script>
 		<script>
 
             //View================
@@ -257,13 +271,18 @@
             }
         });
         $(document).on('click', '.alipaytransactionIdSubmission', function (e) {
-            $("#alipayQrModal").modal('hide');
-            setTimeout(function(){
-                $('#alipayAmountVerify').modal('show');
-            }, 1000);
+            let alp = $('#alipaybalancecopy').val();
+            if(alp==""){
+                alert("Top Up Amount must be filled out");
+                return false;
+            }else{
+                $("#alipayQrModal").modal('hide');
+                setTimeout(function(){
+                    $('#alipayAmountVerify').modal('show');
+                    $('#balanceTop').val(alp);
+                }, 1000);
+            }
         });
-
-
 
         $("#trxidWithBalance").validate({
             rules: {
@@ -394,7 +413,7 @@
             });
         });
         function cnyCalculator() {
-            let txtFirstNo = document.getElementById('balanceTop').value;
+            let txtFirstNo = document.getElementById('alipaybalancecopy').value;
             let txtSecondNo = 6.8;
             let result = parseFloat(txtFirstNo) * parseFloat(txtSecondNo);
             if (!isNaN(result)) {
@@ -419,7 +438,13 @@
         //     }
         // }
     </script>
-	@yield('js')
+    <script>
+        function googleTranslateElementInit() {
+          new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+        }
+      </script>
+      <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    @yield('js')
     <script>
         $('.topupBalance').select2();
     </script>

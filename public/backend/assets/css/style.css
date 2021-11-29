@@ -67182,7 +67182,7 @@ a.tag-addon:hover {
     font-weight: 400;
     display: inline-block;
     position: relative;
-    margin-left: auto;
+    margin-left: 100%!important;
     color: #a8afc7;
 }
 

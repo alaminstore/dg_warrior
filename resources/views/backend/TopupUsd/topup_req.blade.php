@@ -35,7 +35,7 @@
                                 <p class="text-muted card-sub-title">Here is the all topup request those are provided by using transaction id for checking purposes.</p>
                             </div>
                             <div class="table-responsive">
-                                <table id="example2" class="table table-striped table-bordered text-nowrap" >
+                                <table id="example1" class="table table-striped table-bordered text-nowrap" >
                                     <thead>
                                         <tr class="text-center">
                                             <th width="10%">The User</th>
@@ -61,13 +61,13 @@
                                             </td>
                                             <td>
                                                 @if(Auth::user()->role_id == 1)
-                                                    <button type="button" class="proofOfTask btn  btn-primary trxidRequest" data-id="{{ $list->id }}">
+                                                    <button type="button" class="proofOfTask btn btn-sm  btn-primary trxidRequest" data-id="{{ $list->id }}">
                                                         <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
                                                         Approve
                                                     </button>
                                                  @else
                                                  @if (Auth::user()->role_id == 2 && $jobPower == true)
-                                                 <button type="button" class="proofOfTask btn  btn-primary trxidRequest" data-id="{{ $list->id }}">
+                                                 <button type="button" class="proofOfTask btn btn-sm btn-primary trxidRequest" data-id="{{ $list->id }}">
                                                     <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
                                                     Approve
                                                 </button>

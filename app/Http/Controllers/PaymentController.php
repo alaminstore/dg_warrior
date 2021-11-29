@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DgManagerDue;
+use App\SalesAchieved;
 use App\User;
 use Faker\Provider\Uuid;
 use Illuminate\Http\Request;
@@ -35,6 +36,13 @@ class PaymentController extends Controller
                 if($theLeader){
                     $theLeader->manager_task_access = 1;
                     $theLeader->sales_achieved += $theUser->waiting_load_balance;
+                    // st
+                    $salesAchieved = new SalesAchieved();
+                    $salesAchieved->user_id = $theUser->id;
+                    $salesAchieved->topup_amount = $theUser->waiting_load_balance;
+                    $salesAchieved->referrer_id = $theUser->referrer_id;
+                    $salesAchieved->save();
+                    // end
                     $DgManagerDue = new DgManagerDue();
                     $DgManagerDue->user_id = $theLeader->id;
                     $DgManagerDue->manager_due_payment	= .08*$theUser->waiting_load_balance;

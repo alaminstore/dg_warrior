@@ -65,10 +65,10 @@ Route::post('image-updated', 'MyProfileController@updatedImage')->name('backend.
 Route::post('withdraw-request/save', 'MyProfileController@withdrawStatus')->name('withdraw.request');
 Route::get('withdrawable-req','MyProfileController@acceptWithdrawRequest')->name('withdrawable.req');
 Route::get('trxidAccept-req','MyProfileController@trxidAcceptRequest')->name('trxidAccept.req');
-Route::get('withdraw-request', 'MyProfileController@withdrawView')->name('withdrawview.request')->middleware('admincheck');
-Route::get('topup-request', 'MyProfileController@topupReq')->name('TopupRecharge.request')->middleware('admincheck');
-Route::get('withdraw-completed','MyProfileController@acceptWithdrawCompleted')->name('withdraw.complete')->middleware('admincheck');
-Route::get('topup-usdt-completed','MyProfileController@topupAccepted')->name('withdraw.complete')->middleware('admincheck');
+Route::get('withdraw-request', 'MyProfileController@withdrawView')->name('withdrawview.request')->middleware('onlySuperAdmin');
+Route::get('topup-request', 'MyProfileController@topupReq')->name('TopupRecharge.request')->middleware('onlySuperAdmin');
+Route::get('withdraw-completed','MyProfileController@acceptWithdrawCompleted')->name('withdraw.complete')->middleware('onlySuperAdmin');
+Route::get('topup-usdt-completed','MyProfileController@topupAccepted')->name('withdraw.complete')->middleware('onlySuperAdmin');
 Route::post('revision-chance', 'HomeController@revisionSubmit')->name('revision.Submit');
 Route::get('task-revision', 'HomeController@revisionView')->name('revision.view');
 Route::get('view-instruction/{id}', 'HomeController@viewInstruction')->name('viewInstruction.show');
